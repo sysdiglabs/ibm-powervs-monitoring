@@ -66,20 +66,20 @@ done
 # abort if endpoint or key are not provided
 if [ -z "$endpoint" ] || [ -z "$key" ]
 then
-    echo 'Missing Cloud Monitor endpoit (-e) or API Key (-k)' >&2
+    echo 'Missing Cloud Monitor region (-r) or API Key token (-t)' >&2
     usage
     exit 1
 fi
 
 #install wget
 echo "[+] Checking if CURL is installed... "
-if [ -z command -v curl &> /dev/null ]
+if command -v curl &> /dev/null
 then
+    echo -e "[-] ${GREEN}CURL is already installed. Continuing... ${NC}"
+else
     echo "[+] CURL is not installed. Installing..."
     yum install -y curl &> /dev/null
-    echo -e "[-] ${GREEN}OK${NC}"
-else
-    echo -e "[-] ${GREEN}CURL is already installed. Continuing... ${NC}"
+    echo -e "\n[-] ${GREEN}OK${NC}"
 fi
 
 if [ -z "$prometheus" ]
@@ -117,13 +117,13 @@ echo -e "[-] ${GREEN}OK${NC}"
 
 #install wget
 echo "[+] Checking if WGET is installed... "
-if [ -z command -v wget &> /dev/null ]
+if command -v wget &> /dev/null
 then
+    echo -e "[-] ${GREEN}WGET is already installed. Continuing... ${NC}"
+else
     echo -n "[+] WGET is not installed. Installing..."
     yum install -y wget &> /dev/null
-    echo -e "[-] ${GREEN}OK${NC}"
-else
-    echo -e "[-] ${GREEN}WGET is already installed. Continuing... ${NC}"
+    echo -e "\n[-] ${GREEN}OK${NC}"
 fi
 
 # download prometheus
@@ -277,8 +277,8 @@ echo -e "[-] ${GREEN}OK${NC}"
 
 # enable prometheus and node exporter services
 echo "[+] Enabling and starting Prometheus and Node Exporter services..."
-systemctl enable prometheus.service
-systemctl enable node_exporter.service
+systemctl enable prometheus.service &>/dev/null
+systemctl enable node_exporter.service &>/dev/null
 
 # start prometheus and node exporter services
 systemctl start prometheus.service
