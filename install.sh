@@ -16,10 +16,10 @@ NC='\033[0m'
 
 usage() {
   echo
-  echo "Usage: $0 [-e endpoint] [-k key] [-p prometheus_version] [-n node_exporter_version]" 1>&2;
+  echo "Usage: $0 [-r region] [-t token] [-p prometheus_version] [-n node_exporter_version]" 1>&2;
   echo
-  echo -e "\t -e: Cloud Monitor endpoint. Required. Check the full list here: https://cloud.ibm.com/docs/monitoring?topic=monitoring-endpoints#endpoints_monitoring"
-  echo -e "\t -k: Cloud Monitor API Key. Required."
+  echo -e "\t -r: Cloud Monitor endpoint region. Required. Check the full list here: https://cloud.ibm.com/docs/monitoring?topic=monitoring-endpoints#endpoints_monitoring"
+  echo -e "\t -t: Cloud Monitor API Key token. Required."
   echo -e "\t -p: Prometheus version. If not provided, the latest version will be installed."
   echo -e "\t -n: Node Exporter version. If not provided, the latest version will be installed."
   echo -e "\t -u: Uninstall Prometheus and Node Exporter and its dependencies."
@@ -50,13 +50,13 @@ uninstall() {
     exit 1
 }
 
-while getopts p:n:e:k:uh flag
+while getopts r:t:p:n:uh flag
 do
     case "${flag}" in
+        r) endpoint=${OPTARG};;
+        t) key=${OPTARG};;
         p) prometheus=${OPTARG};;
         n) node_exporter=${OPTARG};;
-        e) endpoint=${OPTARG};;
-        k) key=${OPTARG};;
         u) uninstall;;
         h) usage;;
         *) usage;;
