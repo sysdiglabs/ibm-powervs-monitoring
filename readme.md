@@ -11,4 +11,4 @@ https://github.com/sysdiglabs/ibm-powervs-monitoring/assets/7352160/7ae2c42b-024
 
 ### Custom event fired
 
-![fired-event](https://github.com/sysdiglabs/ibm-powervs-monitoring/assets/7352160/1e55a6fb-49ce-489b-a877-39062cf52fbf)
+<img width="1919" alt="ibm-powervs-monitoring" src="https://github.com/sysdiglabs/ibm-powervs-monitoring/assets/7352160/15451781-e835-4233-b224-0aa363c35799">
