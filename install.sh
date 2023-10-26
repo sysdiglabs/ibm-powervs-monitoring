@@ -65,8 +65,8 @@ uninstall() {
     /usr/bin/rm -rf $temp_dir/node_exporter
     /usr/bin/rm -rf $temp_dir/prometheus.tar.gz
     /usr/bin/rm -rf $temp_dir/node_exporter.tar.gz
-    /usr/bin/userdel prometheus
-    /usr/bin/userdel node_exporter
+    /usr/sbin/userdel prometheus
+    /usr/sbin/userdel node_exporter
     echo -e "[-] ${GREEN}OK${NC}"
     exit 1
 }
@@ -191,10 +191,10 @@ echo -e "[-] ${GREEN}OK${NC}"
 
 # create prometheus and node exporter users
 echo "[+] Creating Prometheus and Node Exporter users..."
-/usr/bin/useradd --no-create-home --shell /bin/false prometheus &>/dev/null
-/usr/bin/useradd --no-create-home --shell /bin/false node_exporter &>/dev/null
-/usr/bin/usermod -a -G prometheus prometheus &>/dev/null
-/usr/bin/usermod -a -G node_exporter node_exporter &>/dev/null
+/usr/sbin/useradd --no-create-home --shell /bin/false prometheus &>/dev/null
+/usr/sbin/useradd --no-create-home --shell /bin/false node_exporter &>/dev/null
+/usr/sbin/usermod -a -G prometheus prometheus &>/dev/null
+/usr/sbin/usermod -a -G node_exporter node_exporter &>/dev/null
 echo -e "[-] ${GREEN}OK${NC}"
 
 # make prometheus and node exporter exe/usr/bin/cutable
@@ -291,8 +291,8 @@ echo -e "[-] ${GREEN}OK${NC}"
 
 # disable SELinux for Prometheus and Node Exporter
 echo "[+] Disabling SELinux for Prometheus and Node Exporter..."
-/usr/bin/restorecon -r /usr/local/bin/prometheus
-/usr/bin/restorecon -r /usr/local/bin/node_exporter
+/usr/sbin/restorecon -r /usr/local/bin/prometheus
+/usr/sbin/restorecon -r /usr/local/bin/node_exporter
 echo -e "[-] ${GREEN}OK${NC}"
 
 # enable prometheus and node exporter services
