@@ -1,5 +1,19 @@
 #!/bin/bash
 
+# check if the OS is supported
+if [ ! -f /etc/os-release ]
+then
+    echo "Uncompatible OS. This script only supports RHEL."
+    exit 1
+    else
+        os=$(cat /etc/os-release | grep -oP 'ID="rhel"$' | cut -d '"' -f 2)
+        if [ "$os" != "rhel" ]
+        then
+            echo "Uncompatible OS. This script only supports RHEL."
+            exit 1
+        fi
+fi
+
 # check if the script is being run as root
 if [[ $EUID -ne 0 ]]; then
     echo "This script must be run as root."
@@ -8,6 +22,7 @@ fi
 
 arch="linux-ppc64le"
 bin_dir="/usr/local/bin"
+temp_dir=$(mktemp -d)
 
 # bash colors
 GREEN='\033[0;32m'
@@ -21,8 +36,8 @@ usage() {
   echo -e "\t -r: Cloud Monitor endpoint region. Required. Check the full list here: https://cloud.ibm.com/docs/monitoring?topic=monitoring-endpoints#endpoints_monitoring"
   echo -e "\t -t: Cloud Monitor API Key token. Required."
   echo -e "\t -p: Prometheus version. If not provided, the latest version will be installed."
-  echo -e "\t -n: Node Exporter version. If not provided, the latest version will be installed."
-  echo -e "\t -u: Uninstall Prometheus and Node Exporter and its dependencies."
+  echo -e "\t -n: Node Exporter version. If not provided, the latest version will be installed(optional)."
+  echo -e "\t -u: Uninstall Prometheus and Node Exporter and its dependencies(optional)."
   echo -e "\t -h: Show this help message."
   echo
   exit 1;
@@ -40,10 +55,10 @@ uninstall() {
     rm -rf /opt/prometheus
     rm -rf /etc/systemd/system/prometheus.service
     rm -rf /etc/systemd/system/node_exporter.service
-    rm -rf /tmp/prometheus
-    rm -rf /tmp/node_exporter
-    rm -rf /tmp/prometheus.tar.gz
-    rm -rf /tmp/node_exporter.tar.gz
+    rm -rf $temp_dir/prometheus
+    rm -rf $temp_dir/node_exporter
+    rm -rf $temp_dir/prometheus.tar.gz
+    rm -rf $temp_dir/node_exporter.tar.gz
     userdel prometheus
     userdel node_exporter
     echo -e "[-] ${GREEN}OK${NC}"
@@ -111,7 +126,7 @@ then
 fi
 
 # build the ingestion endpoint based on the provided endpoint
-ingestion_endpoint="https://ingest.$(cut -d '/' -f 3 <<< "$endpoint")"
+ingestion_endpoint="https://ingest.$(cut -d '/' -f 3 <<< "$endpoint")/prometheus/remote/write"
 
 echo -e "[-] ${GREEN}OK${NC}"
 
@@ -128,12 +143,12 @@ fi
 
 # download prometheus
 echo "[+] Downloading Prometheus..."
-wget -q "https://github.com/prometheus/prometheus/releases/download/v$prometheus/prometheus-$prometheus.$arch.tar.gz" -O /tmp/prometheus.tar.gz
+wget -q "https://github.com/prometheus/prometheus/releases/download/v$prometheus/prometheus-$prometheus.$arch.tar.gz" -O $temp_dir/prometheus.tar.gz
 
 # abort if the download failed
 if [ $? -ne 0 ]
 then
-  echo -e "[*] ${RED}ERROR: The selected Prometheus version doesn't exist.${NC}" >&2
+  echo -e "[*] ${RED}ERROR: The selected Prometheus version doesn't exist or failed to download.${NC}" >&2
   exit 1
 fi
 
@@ -141,12 +156,12 @@ echo -e "[-] ${GREEN}OK${NC}"
 
 # download node_exporter
 echo "[+] Downloading Node Exporter..."
-wget -q "https://github.com/prometheus/node_exporter/releases/download/v$node_exporter/node_exporter-$node_exporter.$arch.tar.gz" -O /tmp/node_exporter.tar.gz
+wget -q "https://github.com/prometheus/node_exporter/releases/download/v$node_exporter/node_exporter-$node_exporter.$arch.tar.gz" -O $temp_dir/node_exporter.tar.gz
 
 # abort if the download failed
 if [ $? -ne 0 ]
 then
-  echo -e "[*] ${RED}ERROR: This selected Node Exporter version doesn't exist.${NC}" >&2
+  echo -e "[*] ${RED}ERROR: The selected Node Exporter version doesn't exist or failed to download.${NC}" >&2
   exit 1
 fi
 
@@ -154,18 +169,18 @@ echo -e "[-] ${GREEN}OK${NC}"
 
 # make temp dir to extract prometheus and node exporter
 echo "[+] Creating temp directory..."
-mkdir -p /tmp/prometheus
-mkdir -p /tmp/node_exporter
+mkdir -p $temp_dir/prometheus
+mkdir -p $temp_dir/node_exporter
 
-# if no /tmp found, abort
-cd /tmp || { echo -e "[*] ${RED}ERROR: No /tmp found.${NC}"; exit 1; }
+# if no $temp_dir found, abort
+cd $temp_dir || { echo -e "[*] ${RED}ERROR: No $temp_dir found.${NC}"; exit 1; }
 
 echo -e "[-] ${GREEN}OK${NC}"
 
 # extract prometheus and node exporter
 echo "[+] Extracting Prometheus and Node Exporter..."
-tar xfz /tmp/prometheus.tar.gz -C /tmp/prometheus || { echo -e "[*] ${RED}ERROR! Extracting the prometheus tar.${NC}"; exit 1; }
-tar xfz /tmp/node_exporter.tar.gz -C /tmp/node_exporter || { echo -e "[*] ${RED}ERROR! Extracting the node_exporter tar.${NC}"; exit 1; }
+tar xfz $temp_dir/prometheus.tar.gz -C $temp_dir/prometheus || { echo -e "[*] ${RED}ERROR! Extracting the prometheus tar.${NC}"; exit 1; }
+tar xfz $temp_dir/node_exporter.tar.gz -C $temp_dir/node_exporter || { echo -e "[*] ${RED}ERROR! Extracting the node_exporter tar.${NC}"; exit 1; }
 echo -e "[-] ${GREEN}OK${NC}"
 
 # create prometheus and node exporter users
@@ -178,14 +193,14 @@ echo -e "[-] ${GREEN}OK${NC}"
 
 # make prometheus and node exporter executable
 echo "[+] Making Prometheus and Node Exporter executable..."
-chmod +x "/tmp/prometheus/prometheus-$prometheus.$arch/prometheus"
-chmod +x "/tmp/node_exporter/node_exporter-$node_exporter.$arch/node_exporter"
+chmod +x "$temp_dir/prometheus/prometheus-$prometheus.$arch/prometheus"
+chmod +x "$temp_dir/node_exporter/node_exporter-$node_exporter.$arch/node_exporter"
 echo -e "[-] ${GREEN}OK${NC}"
 
 # change prometheus and node exporter ownership
 echo "[+] Changing Prometheus and Node Exporter ownership..."
-chown prometheus:prometheus "/tmp/prometheus/prometheus-$prometheus.$arch/prometheus"
-chown node_exporter:node_exporter "/tmp/node_exporter/node_exporter-$node_exporter.$arch/node_exporter"
+chown prometheus:prometheus "$temp_dir/prometheus/prometheus-$prometheus.$arch/prometheus"
+chown node_exporter:node_exporter "$temp_dir/node_exporter/node_exporter-$node_exporter.$arch/node_exporter"
 echo -e "[-] ${GREEN}OK${NC}"
 
 # create prometheus temp directory
@@ -197,8 +212,8 @@ echo -e "[-] ${GREEN}OK${NC}"
 
 # move prometheus and node exporter to bin dir
 echo "[+] Moving Prometheus and Node Exporter to $bin_dir..."
-mv "/tmp/prometheus/prometheus-$prometheus.$arch/prometheus" "$bin_dir"
-mv "/tmp/node_exporter/node_exporter-$node_exporter.$arch/node_exporter" "$bin_dir"
+mv "$temp_dir/prometheus/prometheus-$prometheus.$arch/prometheus" "$bin_dir"
+mv "$temp_dir/node_exporter/node_exporter-$node_exporter.$arch/node_exporter" "$bin_dir"
 echo -e "[-] ${GREEN}OK${NC}"
 
 # create prometheus service file
@@ -212,8 +227,7 @@ After=network.target
 User=prometheus
 Group=prometheus
 Type=simple
-ExecStart=/usr/local/bin/prometheus --config.file=/etc/prometheus/prometheus.yml --storage.agent.path=/opt/prometheus
---enable-feature=agent
+ExecStart=/usr/local/bin/prometheus --config.file=/etc/prometheus/prometheus.yml --storage.agent.path=/opt/prometheus --enable-feature=agent
 
 [Install]
 WantedBy=multi-user.target
@@ -299,24 +313,27 @@ else
     echo -e "[*] ${RED}Node Exporter is NOT running.${NC}"
 fi
 
-event_json='{"event": {"type": "CUSTOM","description": "Prometheus and Node Exporter installed successfully!","name": "New host added","scope": "host.hostName = \"'$(hostname)'\"","severity": "LOW","source": "CMD","tags": {"source": "CMD"}}}'
+if systemctl is-active --quiet node_exporter && systemctl is-active --quiet prometheus; then
+    event_json='{"event": {"type": "CUSTOM","description": "Prometheus and Node Exporter installed successfully!","name": "New PowerVS host connected","scope": "host.hostName = \"'$(hostname)'\"","severity": "LOW","source": "CMD","tags": {"source": "CMD"}}}'
 
-# send a event to Cloud Monitoring
-echo "[+] Sending a test event to Cloud Monitoring..."
-event=$(curl -s -d "$event_json" -H "Authorization: Bearer $key" -H "Content-Type: application/json" $endpoint/api/v2/events)
-if [ -z "$event" ]
-then
-    echo -e "[*] ${RED}ERROR! Someting went wrong. Please check your endpoint and key.${NC}" >&2
-    exit 1
+    # send a event to Cloud Monitoring
+    echo "[+] Sending a test event to Cloud Monitoring..."
+    event=$(curl -s -d "$event_json" -H "Authorization: Bearer $key" -H "Content-Type: application/json" $endpoint/api/v2/events)
+    if [ -z "$event" ]
+    then
+        echo -e "[*] ${RED}ERROR! Someting went wrong. Please check your endpoint and key.${NC}" >&2
+        exit 1
+    fi
+    echo -e "[-] ${GREEN}OK${NC}"
 fi
-echo -e "[-] ${GREEN}OK${NC}"
+
 
 # cleaning up
 echo "[+] Cleaning up..."
-rm -rf /tmp/prometheus
-rm -rf /tmp/node_exporter
-rm -rf /tmp/prometheus.tar.gz
-rm -rf /tmp/node_exporter.tar.gz
+rm -rf $temp_dir/prometheus
+rm -rf $temp_dir/node_exporter
+rm -rf $temp_dir/prometheus.tar.gz
+rm -rf $temp_dir/node_exporter.tar.gz
 echo -e "[-] ${GREEN}OK${NC}"
 
 echo "SUCCESS! Installation succeeded!"
