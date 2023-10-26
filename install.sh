@@ -278,6 +278,11 @@ scrape_configs:
   - job_name: "node_exporter"
     static_configs:
       - targets: ["localhost:9100"]
+    metric_relabel_configs:
+      - source_labels: [instance]
+        target_label: instance
+        regex: '(.*)'
+        replacement: '$(/usr/bin/hostname)'
 EOF
 
 /usr/bin/chown prometheus:prometheus /etc/prometheus/prometheus.yml
