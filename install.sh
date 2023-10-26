@@ -3,13 +3,19 @@
 # check if the OS is supported
 if [ ! -f /etc/os-release ]
 then
-    echo "Uncompatible OS. This script only supports RHEL."
+    echo "Uncompatible OS. This script only supports RHEL and PPC64le architecture."
     exit 1
     else
-        os=$(cat /etc/os-release | grep -oP 'ID="rhel"$' | cut -d '"' -f 2)
+        os=$(/usr/bin/cat /etc/os-release | /usr/bin/grep -oP 'ID="rhel"$' | /usr/bin/cut -d '"' -f 2)
         if [ "$os" != "rhel" ]
         then
-            echo "Uncompatible OS. This script only supports RHEL."
+            echo "Uncompatible OS. This script only supports RHEL and PPC64le architecture."
+            exit 1
+        fi
+        arch=$(/usr/bin/uname -i)
+        if [ "$arch" != "ppc64le" ]
+        then
+            echo "Uncompatible OS. This script only supports RHEL and PPC64le architecture."
             exit 1
         fi
 fi
@@ -22,7 +28,7 @@ fi
 
 arch="linux-ppc64le"
 bin_dir="/usr/local/bin"
-temp_dir=$(mktemp -d)
+temp_dir=$(/usr/bin/mktemp -d)
 
 # bash colors
 GREEN='\033[0;32m'
@@ -45,22 +51,22 @@ usage() {
 
 uninstall() {
     echo "[+] Uninstalling Prometheus and Node Exporter..."
-    systemctl stop prometheus.service &>/dev/null
-    systemctl stop node_exporter.service &>/dev/null
-    systemctl disable prometheus.service &>/dev/null
-    systemctl disable node_exporter.service &>/dev/null
-    rm -rf /usr/local/bin/prometheus
-    rm -rf /usr/local/bin/node_exporter
-    rm -rf /etc/prometheus
-    rm -rf /opt/prometheus
-    rm -rf /etc/systemd/system/prometheus.service
-    rm -rf /etc/systemd/system/node_exporter.service
-    rm -rf $temp_dir/prometheus
-    rm -rf $temp_dir/node_exporter
-    rm -rf $temp_dir/prometheus.tar.gz
-    rm -rf $temp_dir/node_exporter.tar.gz
-    userdel prometheus
-    userdel node_exporter
+    /usr/bin/systemctl stop prometheus.service &>/dev/null
+    /usr/bin/systemctl stop node_exporter.service &>/dev/null
+    /usr/bin/systemctl disable prometheus.service &>/dev/null
+    /usr/bin/systemctl disable node_exporter.service &>/dev/null
+    /usr/bin/rm -rf /usr/local/bin/prometheus
+    /usr/bin/rm -rf /usr/local/bin/node_exporter
+    /usr/bin/rm -rf /etc/prometheus
+    /usr/bin/rm -rf /opt/prometheus
+    /usr/bin/rm -rf /etc/systemd/system/prometheus.service
+    /usr/bin/rm -rf /etc/systemd/system/node_exporter.service
+    /usr/bin/rm -rf $temp_dir/prometheus
+    /usr/bin/rm -rf $temp_dir/node_exporter
+    /usr/bin/rm -rf $temp_dir/prometheus.tar.gz
+    /usr/bin/rm -rf $temp_dir/node_exporter.tar.gz
+    /usr/bin/userdel prometheus
+    /usr/bin/userdel node_exporter
     echo -e "[-] ${GREEN}OK${NC}"
     exit 1
 }
@@ -88,30 +94,30 @@ fi
 
 #install wget
 echo "[+] Checking if CURL is installed... "
-if command -v curl &> /dev/null
+if command -v /usr/bin/curl &> /dev/null
 then
     echo -e "[-] ${GREEN}CURL is already installed. Continuing... ${NC}"
 else
     echo "[+] CURL is not installed. Installing..."
-    yum install -y curl &> /dev/null
+    /usr/bin/yum install -y curl &> /dev/null
     echo -e "\n[-] ${GREEN}OK${NC}"
 fi
 
 if [ -z "$prometheus" ]
 then #lastest version
-    prometheus=$(curl -s https://api.github.com/repos/prometheus/prometheus/releases/latest | grep tag_name | cut -d '"' -f 4)
+    prometheus=$(/usr/bin/curl -s https://api.github.com/repos/prometheus/prometheus/releases/latest | /usr/bin/grep tag_name | /usr/bin/cut -d '"' -f 4)
     prometheus=${prometheus:1}
 fi
 
 if [ -z "$node_exporter" ]
 then #lastest version
-    node_exporter=$(curl -s https://api.github.com/repos/prometheus/node_exporter/releases/latest | grep tag_name | cut -d '"' -f 4)
+    node_exporter=$(/usr/bin/curl -s https://api.github.com/repos/prometheus/node_exporter/releases/latest | /usr/bin/grep tag_name | /usr/bin/cut -d '"' -f 4)
     node_exporter=${node_exporter:1}
 fi
 
 # check credentials
 echo "[+] Checking credentials... "
-remote_key=$(curl -s -H "Authorization: Bearer $key" -H "Content-Type: application/json" $endpoint/api/token | grep -oE '"key":"[a-zA-Z0-9\-]*' | cut -d ':' -f 2 | tr -d '"')
+remote_key=$(/usr/bin/curl -s -H "Authorization: Bearer $key" -H "Content-Type: appli/usr/bin/cation/json" $endpoint/api/token | /usr/bin/grep -oE '"key":"[a-zA-Z0-9\-]*' | /usr/bin/cut -d ':' -f 2 | /usr/bin/tr -d '"')
 
 if [ -z "$remote_key" ]
 then
@@ -126,7 +132,7 @@ then
 fi
 
 # build the ingestion endpoint based on the provided endpoint
-ingestion_endpoint="https://ingest.$(cut -d '/' -f 3 <<< "$endpoint")/prometheus/remote/write"
+ingestion_endpoint="https://ingest.$(/usr/bin/cut -d '/' -f 3 <<< "$endpoint")/prometheus/remote/write"
 
 echo -e "[-] ${GREEN}OK${NC}"
 
@@ -137,13 +143,13 @@ then
     echo -e "[-] ${GREEN}WGET is already installed. Continuing... ${NC}"
 else
     echo -n "[+] WGET is not installed. Installing..."
-    yum install -y wget &> /dev/null
+    /usr/bin/yum install -y wget &> /dev/null
     echo -e "\n[-] ${GREEN}OK${NC}"
 fi
 
 # download prometheus
 echo "[+] Downloading Prometheus..."
-wget -q "https://github.com/prometheus/prometheus/releases/download/v$prometheus/prometheus-$prometheus.$arch.tar.gz" -O $temp_dir/prometheus.tar.gz
+/usr/bin/wget -q "https://github.com/prometheus/prometheus/releases/download/v$prometheus/prometheus-$prometheus.$arch.tar.gz" -O $temp_dir/prometheus.tar.gz
 
 # abort if the download failed
 if [ $? -ne 0 ]
@@ -156,7 +162,7 @@ echo -e "[-] ${GREEN}OK${NC}"
 
 # download node_exporter
 echo "[+] Downloading Node Exporter..."
-wget -q "https://github.com/prometheus/node_exporter/releases/download/v$node_exporter/node_exporter-$node_exporter.$arch.tar.gz" -O $temp_dir/node_exporter.tar.gz
+/usr/bin/wget -q "https://github.com/prometheus/node_exporter/releases/download/v$node_exporter/node_exporter-$node_exporter.$arch.tar.gz" -O $temp_dir/node_exporter.tar.gz
 
 # abort if the download failed
 if [ $? -ne 0 ]
@@ -169,8 +175,8 @@ echo -e "[-] ${GREEN}OK${NC}"
 
 # make temp dir to extract prometheus and node exporter
 echo "[+] Creating temp directory..."
-mkdir -p $temp_dir/prometheus
-mkdir -p $temp_dir/node_exporter
+/usr/bin/mkdir -p $temp_dir/prometheus
+/usr/bin/mkdir -p $temp_dir/node_exporter
 
 # if no $temp_dir found, abort
 cd $temp_dir || { echo -e "[*] ${RED}ERROR: No $temp_dir found.${NC}"; exit 1; }
@@ -179,46 +185,46 @@ echo -e "[-] ${GREEN}OK${NC}"
 
 # extract prometheus and node exporter
 echo "[+] Extracting Prometheus and Node Exporter..."
-tar xfz $temp_dir/prometheus.tar.gz -C $temp_dir/prometheus || { echo -e "[*] ${RED}ERROR! Extracting the prometheus tar.${NC}"; exit 1; }
-tar xfz $temp_dir/node_exporter.tar.gz -C $temp_dir/node_exporter || { echo -e "[*] ${RED}ERROR! Extracting the node_exporter tar.${NC}"; exit 1; }
+/usr/bin/tar xfz $temp_dir/prometheus.tar.gz -C $temp_dir/prometheus || { echo -e "[*] ${RED}ERROR! Extracting the prometheus tar.${NC}"; exit 1; }
+/usr/bin/tar xfz $temp_dir/node_exporter.tar.gz -C $temp_dir/node_exporter || { echo -e "[*] ${RED}ERROR! Extracting the node_exporter tar.${NC}"; exit 1; }
 echo -e "[-] ${GREEN}OK${NC}"
 
 # create prometheus and node exporter users
 echo "[+] Creating Prometheus and Node Exporter users..."
-useradd --no-create-home --shell /bin/false prometheus &>/dev/null
-useradd --no-create-home --shell /bin/false node_exporter &>/dev/null
-usermod -a -G prometheus prometheus &>/dev/null
-usermod -a -G node_exporter node_exporter &>/dev/null
+/usr/bin/useradd --no-create-home --shell /bin/false prometheus &>/dev/null
+/usr/bin/useradd --no-create-home --shell /bin/false node_exporter &>/dev/null
+/usr/bin/usermod -a -G prometheus prometheus &>/dev/null
+/usr/bin/usermod -a -G node_exporter node_exporter &>/dev/null
 echo -e "[-] ${GREEN}OK${NC}"
 
-# make prometheus and node exporter executable
-echo "[+] Making Prometheus and Node Exporter executable..."
-chmod +x "$temp_dir/prometheus/prometheus-$prometheus.$arch/prometheus"
-chmod +x "$temp_dir/node_exporter/node_exporter-$node_exporter.$arch/node_exporter"
+# make prometheus and node exporter exe/usr/bin/cutable
+echo "[+] Making Prometheus and Node Exporter exe/usr/bin/cutable..."
+/usr/bin/chmod +x "$temp_dir/prometheus/prometheus-$prometheus.$arch/prometheus"
+/usr/bin/chmod +x "$temp_dir/node_exporter/node_exporter-$node_exporter.$arch/node_exporter"
 echo -e "[-] ${GREEN}OK${NC}"
 
 # change prometheus and node exporter ownership
 echo "[+] Changing Prometheus and Node Exporter ownership..."
-chown prometheus:prometheus "$temp_dir/prometheus/prometheus-$prometheus.$arch/prometheus"
-chown node_exporter:node_exporter "$temp_dir/node_exporter/node_exporter-$node_exporter.$arch/node_exporter"
+/usr/bin/chown prometheus:prometheus "$temp_dir/prometheus/prometheus-$prometheus.$arch/prometheus"
+/usr/bin/chown node_exporter:node_exporter "$temp_dir/node_exporter/node_exporter-$node_exporter.$arch/node_exporter"
 echo -e "[-] ${GREEN}OK${NC}"
 
 # create prometheus temp directory
 echo "[+] Creating Prometheus directories..."
-mkdir /opt/prometheus &>/dev/null
-mkdir /etc/prometheus &>/dev/null
-chown prometheus:prometheus /opt/prometheus
+/usr/bin/mkdir /opt/prometheus &>/dev/null
+/usr/bin/mkdir /etc/prometheus &>/dev/null
+/usr/bin/chown prometheus:prometheus /opt/prometheus
 echo -e "[-] ${GREEN}OK${NC}"
 
 # move prometheus and node exporter to bin dir
 echo "[+] Moving Prometheus and Node Exporter to $bin_dir..."
-mv "$temp_dir/prometheus/prometheus-$prometheus.$arch/prometheus" "$bin_dir"
-mv "$temp_dir/node_exporter/node_exporter-$node_exporter.$arch/node_exporter" "$bin_dir"
+/usr/bin/mv "$temp_dir/prometheus/prometheus-$prometheus.$arch/prometheus" "$bin_dir"
+/usr/bin/mv "$temp_dir/node_exporter/node_exporter-$node_exporter.$arch/node_exporter" "$bin_dir"
 echo -e "[-] ${GREEN}OK${NC}"
 
 # create prometheus service file
 echo "[+] Creating Prometheus and Node Exporter service files..."
-cat <<EOF > /etc/systemd/system/prometheus.service
+/usr/bin/cat <<EOF > /etc/systemd/system/prometheus.service
 [Unit]
 Description=Prometheus
 After=network.target
@@ -234,7 +240,7 @@ WantedBy=multi-user.target
 EOF
 
 # create node exporter service file
-cat <<EOF > /etc/systemd/system/node_exporter.service
+/usr/bin/cat <<EOF > /etc/systemd/system/node_exporter.service
 [Unit]
 Description=Node Exporter
 After=network.target
@@ -258,7 +264,7 @@ echo -e "[-] ${GREEN}OK${NC}"
 
 # create prometheus config file
 echo "[+] Creating Prometheus config file..."
-cat <<EOF > /etc/prometheus/prometheus.yml
+/usr/bin/cat <<EOF > /etc/prometheus/prometheus.yml
 
 global:
   scrape_interval: 10s
@@ -274,51 +280,51 @@ scrape_configs:
       - targets: ["localhost:9100"]
 EOF
 
-chown prometheus:prometheus /etc/prometheus/prometheus.yml
+/usr/bin/chown prometheus:prometheus /etc/prometheus/prometheus.yml
 echo -e "[-] ${GREEN}OK${NC}"
 
 
 # reload systemd services
 echo "[+] Reloading systemd services..."
-systemctl daemon-reload
+/usr/bin/systemctl daemon-reload
 echo -e "[-] ${GREEN}OK${NC}"
 
 # disable SELinux for Prometheus and Node Exporter
 echo "[+] Disabling SELinux for Prometheus and Node Exporter..."
-restorecon -r /usr/local/bin/prometheus
-restorecon -r /usr/local/bin/node_exporter
+/usr/bin/restorecon -r /usr/local/bin/prometheus
+/usr/bin/restorecon -r /usr/local/bin/node_exporter
 echo -e "[-] ${GREEN}OK${NC}"
 
 # enable prometheus and node exporter services
 echo "[+] Enabling and starting Prometheus and Node Exporter services..."
-systemctl enable prometheus.service &>/dev/null
-systemctl enable node_exporter.service &>/dev/null
+/usr/bin/systemctl enable prometheus.service &>/dev/null
+/usr/bin/systemctl enable node_exporter.service &>/dev/null
 
 # start prometheus and node exporter services
-systemctl start prometheus.service
-systemctl start node_exporter.service
+/usr/bin/systemctl start prometheus.service
+/usr/bin/systemctl start node_exporter.service
 echo -e "[-] ${GREEN}OK${NC}"
 
 # check if prometheus and node exporter are running
 echo "[+] Checking if Prometheus and Node Exporter are running..."
-if systemctl is-active --quiet prometheus; then
+if /usr/bin/systemctl is-active --quiet prometheus; then
     echo -e "[-] ${GREEN}Prometheus is running.${NC}"
 else
     echo -e "[*] ${RED}Prometheus is NOT running.${NC}"
 fi
 
-if systemctl is-active --quiet node_exporter; then
+if /usr/bin/systemctl is-active --quiet node_exporter; then
     echo -e "[-] ${GREEN}Node Exporter is running.${NC}"
 else
     echo -e "[*] ${RED}Node Exporter is NOT running.${NC}"
 fi
 
-if systemctl is-active --quiet node_exporter && systemctl is-active --quiet prometheus; then
-    event_json='{"event": {"type": "CUSTOM","description": "Prometheus and Node Exporter installed successfully!","name": "New PowerVS host connected","scope": "host.hostName = \"'$(hostname)'\"","severity": "LOW","source": "CMD","tags": {"source": "CMD"}}}'
+if /usr/bin/systemctl is-active --quiet node_exporter && /usr/bin/systemctl is-active --quiet prometheus; then
+    event_json='{"event": {"type": "CUSTOM","description": "Prometheus and Node Exporter installed successfully!","name": "New PowerVS host connected","scope": "host.hostName = \"'$(/usr/bin/hostname)'\"","severity": "LOW","source": "CMD","tags": {"source": "CMD"}}}'
 
     # send a event to Cloud Monitoring
     echo "[+] Sending a test event to Cloud Monitoring..."
-    event=$(curl -s -d "$event_json" -H "Authorization: Bearer $key" -H "Content-Type: application/json" $endpoint/api/v2/events)
+    event=$(/usr/bin/curl -s -d "$event_json" -H "Authorization: Bearer $key" -H "Content-Type: appli/usr/bin/cation/json" $endpoint/api/v2/events)
     if [ -z "$event" ]
     then
         echo -e "[*] ${RED}ERROR! Someting went wrong. Please check your endpoint and key.${NC}" >&2
@@ -330,10 +336,10 @@ fi
 
 # cleaning up
 echo "[+] Cleaning up..."
-rm -rf $temp_dir/prometheus
-rm -rf $temp_dir/node_exporter
-rm -rf $temp_dir/prometheus.tar.gz
-rm -rf $temp_dir/node_exporter.tar.gz
+/usr/bin/rm -rf $temp_dir/prometheus
+/usr/bin/rm -rf $temp_dir/node_exporter
+/usr/bin/rm -rf $temp_dir/prometheus.tar.gz
+/usr/bin/rm -rf $temp_dir/node_exporter.tar.gz
 echo -e "[-] ${GREEN}OK${NC}"
 
 echo "SUCCESS! Installation succeeded!"
