@@ -329,7 +329,7 @@ if /usr/bin/systemctl is-active --quiet node_exporter && /usr/bin/systemctl is-a
 
     # send a event to Cloud Monitoring
     echo "[+] Sending a test event to Cloud Monitoring..."
-    event=$(/usr/bin/curl -s -d "$event_json" -H "Authorization: Bearer $key" -H "Content-Type: appli/usr/bin/cation/json" $endpoint/api/v2/events)
+    event=$(/usr/bin/curl -s -d "$event_json" -H "Authorization: Bearer $key" -H "Content-Type: application/json" $endpoint/api/v2/events)
     if [ -z "$event" ]
     then
         echo -e "[*] ${RED}ERROR! Someting went wrong. Please check your endpoint and key.${NC}" >&2
