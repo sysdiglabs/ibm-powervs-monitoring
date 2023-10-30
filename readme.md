@@ -54,6 +54,11 @@ Collectors can be configured in the ```node_exporter.service``` file.
 
 The full available list of collectors can be found in the official [node_exporter repository](https://github.com/prometheus/node_exporter).
 
+### Visualization
+
+![Linux PowerVS](https://github.com/sysdiglabs/ibm-powervs-monitoring/assets/7352160/f5754145-ef2d-44d9-a120-16b520889354)
+
+
 ### Uninstall
 
 To uninstall the monitoring stack, run the following command:
