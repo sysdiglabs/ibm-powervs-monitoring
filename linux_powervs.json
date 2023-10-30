@@ -1,0 +1,2039 @@
+{
+    "id": 1161,
+    "teamId": 280,
+    "userId": 391,
+    "name": "Linux PowerVS\u00a0",
+    "panels": [
+        {
+            "id": 1,
+            "type": "advancedNumber",
+            "name": "Cores",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "count(node_cpu_seconds_total{$__scope})",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "",
+                        "timeSeriesDisplayNameTemplate": "",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "number",
+                        "inputFormat": "1",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "numberThresholds": {
+                "useDefaults": null,
+                "values": [],
+                "base": {
+                    "severity": "none",
+                    "displayText": ""
+                }
+            }
+        },
+        {
+            "id": 2,
+            "type": "advancedNumber",
+            "name": "Total memory",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "node_memory_MemTotal_bytes{$__scope}",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "",
+                        "timeSeriesDisplayNameTemplate": "",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "number",
+                        "inputFormat": "1",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "numberThresholds": {
+                "useDefaults": null,
+                "values": [],
+                "base": {
+                    "severity": "none",
+                    "displayText": ""
+                }
+            }
+        },
+        {
+            "id": 3,
+            "type": "advancedNumber",
+            "name": "Average CPU Usage",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "avg(100 * sum(rate(node_cpu_seconds_total{$__scope, mode != 'idle'}[$__range])) / count(node_cpu_seconds_total{instance=$host}))",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "",
+                        "timeSeriesDisplayNameTemplate": "",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "%",
+                        "inputFormat": "0-100",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "numberThresholds": {
+                "useDefaults": null,
+                "values": [
+                    {
+                        "severity": "high",
+                        "value": 90.0,
+                        "inputFormat": "0-100",
+                        "displayText": ""
+                    },
+                    {
+                        "severity": "medium",
+                        "value": 78.0,
+                        "inputFormat": "0-100",
+                        "displayText": ""
+                    }
+                ],
+                "base": {
+                    "severity": "ok",
+                    "displayText": ""
+                }
+            }
+        },
+        {
+            "id": 4,
+            "type": "advancedNumber",
+            "name": "Physical Memory Usage",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "avg (100 * (node_memory_MemTotal_bytes{$__scope} - node_memory_MemFree_bytes{$__scope}) / node_memory_MemTotal_bytes{$__scope})",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "",
+                        "timeSeriesDisplayNameTemplate": "",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "%",
+                        "inputFormat": "0-100",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "numberThresholds": {
+                "useDefaults": null,
+                "values": [
+                    {
+                        "severity": "high",
+                        "value": 90.0,
+                        "inputFormat": "0-100",
+                        "displayText": ""
+                    },
+                    {
+                        "severity": "medium",
+                        "value": 75.0,
+                        "inputFormat": "0-100",
+                        "displayText": ""
+                    }
+                ],
+                "base": {
+                    "severity": "ok",
+                    "displayText": ""
+                }
+            }
+        },
+        {
+            "id": 5,
+            "type": "advancedToplist",
+            "name": "Network Traffic",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "sum(rate(node_network_receive_bytes_total{$__scope, device!=\"lo\"}[$__interval]))",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Traffic in",
+                        "timeSeriesDisplayNameTemplate": "",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "byteRate",
+                        "inputFormat": "B/s",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                },
+                {
+                    "query": "sum(rate(node_network_transmit_bytes_total{$__scope, device!=\"lo\"}[$__interval]))",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Traffic out",
+                        "timeSeriesDisplayNameTemplate": "",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "%",
+                        "inputFormat": "0-100",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ]
+        },
+        {
+            "id": 7,
+            "type": "text",
+            "name": "Disk",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "markdownSource": "# Disk",
+            "transparentBackground": false,
+            "panelTitleVisible": false,
+            "textAutosized": false
+        },
+        {
+            "id": 9,
+            "type": "advancedTimechart",
+            "name": "CPU Usage",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "avg(100 * sum(rate(node_cpu_seconds_total{$__scope, mode != 'idle'}[$__range])) by(instance) / count(node_cpu_seconds_total{$__scope}) by(instance)) by(instance)",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "CPU Usage | Host",
+                        "timeSeriesDisplayNameTemplate": "{{instance}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "%",
+                        "inputFormat": "0-100",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "nullGap",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "legendConfiguration": {
+                "enabled": true,
+                "position": "bottom",
+                "layout": "table",
+                "showCurrent": true,
+                "width": null,
+                "height": null
+            },
+            "axesConfiguration": {
+                "bottom": {
+                    "enabled": true
+                },
+                "left": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "0-100",
+                    "maxInputFormat": "0-100",
+                    "scale": "log10"
+                },
+                "right": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "0-100",
+                    "maxInputFormat": "0-100",
+                    "scale": "linear"
+                }
+            }
+        },
+        {
+            "id": 12,
+            "type": "text",
+            "name": "Networking",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "markdownSource": "# Networking",
+            "transparentBackground": false,
+            "panelTitleVisible": false,
+            "textAutosized": false
+        },
+        {
+            "id": 13,
+            "type": "advancedTimechart",
+            "name": "Disk Usage",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "1-(node_filesystem_free_bytes{$__scope} / node_filesystem_size_bytes{$__scope})",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Volume < Host",
+                        "timeSeriesDisplayNameTemplate": "{{device}} < {{instance}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "%",
+                        "inputFormat": "0-1",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectSolid",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "legendConfiguration": {
+                "enabled": true,
+                "position": "bottom",
+                "layout": "table",
+                "showCurrent": true,
+                "width": null,
+                "height": null
+            },
+            "axesConfiguration": {
+                "bottom": {
+                    "enabled": true
+                },
+                "left": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "0-1",
+                    "maxInputFormat": "0-1",
+                    "scale": "linear"
+                },
+                "right": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                }
+            }
+        },
+        {
+            "id": 14,
+            "type": "advancedTimechart",
+            "name": "Inodes Usage",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "1-(node_filesystem_files_free{$__scope} / node_filesystem_files{$__scope})",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Volume < Host",
+                        "timeSeriesDisplayNameTemplate": "{{device}} < {{instance}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "%",
+                        "inputFormat": "0-1",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectSolid",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "legendConfiguration": {
+                "enabled": true,
+                "position": "bottom",
+                "layout": "table",
+                "showCurrent": true,
+                "width": null,
+                "height": null
+            },
+            "axesConfiguration": {
+                "bottom": {
+                    "enabled": true
+                },
+                "left": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "0-1",
+                    "maxInputFormat": "0-1",
+                    "scale": "linear"
+                },
+                "right": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                }
+            }
+        },
+        {
+            "id": 10,
+            "type": "advancedTimechart",
+            "name": "Memory Usage",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "1- (node_memory_MemFree_bytes{$__scope} / node_memory_MemTotal_bytes{$__scope})",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Physical Memory | Host",
+                        "timeSeriesDisplayNameTemplate": "Physical Memory | {{instance}} ",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "%",
+                        "inputFormat": "0-1",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "nullGap",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                },
+                {
+                    "query": "1- (node_memory_SwapFree_bytes{$__scope} / node_memory_SwapTotal_bytes{$__scope})",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Virtual Memory | Host",
+                        "timeSeriesDisplayNameTemplate": "Virtual Memory | {{instance}} ",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "%",
+                        "inputFormat": "0-100",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "legendConfiguration": {
+                "enabled": true,
+                "position": "bottom",
+                "layout": "table",
+                "showCurrent": true,
+                "width": null,
+                "height": null
+            },
+            "axesConfiguration": {
+                "bottom": {
+                    "enabled": true
+                },
+                "left": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "0-100",
+                    "maxInputFormat": "0-100",
+                    "scale": "linear"
+                },
+                "right": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                }
+            }
+        },
+        {
+            "id": 15,
+            "type": "advancedTimechart",
+            "name": "CPU Usage by Mode",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "100 * avg by (mode,instance) (rate(node_cpu_seconds_total{$__scope, mode!=\"idle\"}[$__interval]))",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Mode",
+                        "timeSeriesDisplayNameTemplate": "{{mode}}",
+                        "type": "stackedArea"
+                    },
+                    "format": {
+                        "unit": "%",
+                        "inputFormat": "0-100",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "nullGap",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "legendConfiguration": {
+                "enabled": true,
+                "position": "bottom",
+                "layout": "inline",
+                "showCurrent": true,
+                "width": null,
+                "height": null
+            },
+            "axesConfiguration": {
+                "bottom": {
+                    "enabled": true
+                },
+                "left": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "0-100",
+                    "maxInputFormat": "0-100",
+                    "scale": "linear"
+                },
+                "right": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "0-100",
+                    "maxInputFormat": "0-100",
+                    "scale": "linear"
+                }
+            }
+        },
+        {
+            "id": 16,
+            "type": "advancedTimechart",
+            "name": "Free memory",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "node_memory_MemFree_bytes{$__scope}",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": " Physical Memory | Host",
+                        "timeSeriesDisplayNameTemplate": "Physical Memory | {{instance}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "byte",
+                        "inputFormat": "B",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "nullGap",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                },
+                {
+                    "query": "node_memory_SwapFree_bytes{$__scope}",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": " Virtual Memory | Host",
+                        "timeSeriesDisplayNameTemplate": "Virtual Memory | {{instance}} ",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "byte",
+                        "inputFormat": "B",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "legendConfiguration": {
+                "enabled": true,
+                "position": "bottom",
+                "layout": "table",
+                "showCurrent": true,
+                "width": null,
+                "height": null
+            },
+            "axesConfiguration": {
+                "bottom": {
+                    "enabled": true
+                },
+                "left": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "B",
+                    "maxInputFormat": "B",
+                    "scale": "linear"
+                },
+                "right": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                }
+            }
+        },
+        {
+            "id": 17,
+            "type": "advancedTimechart",
+            "name": "Disk Read IOPS",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "rate(node_disk_reads_completed_total{$__scope, device!=\"dm-0\"}[$__interval])",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Volume < Host",
+                        "timeSeriesDisplayNameTemplate": "{{device}} < {{instance}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "number",
+                        "inputFormat": "1",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectSolid",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "legendConfiguration": {
+                "enabled": true,
+                "position": "bottom",
+                "layout": "table",
+                "showCurrent": true,
+                "width": null,
+                "height": null
+            },
+            "axesConfiguration": {
+                "bottom": {
+                    "enabled": true
+                },
+                "left": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                },
+                "right": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                }
+            }
+        },
+        {
+            "id": 18,
+            "type": "advancedTimechart",
+            "name": "Disk Write IOPS",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "rate(node_disk_writes_completed_total{$__scope, device!=\"dm-0\"}[$__interval])",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Volume < Host",
+                        "timeSeriesDisplayNameTemplate": "{{device}} < {{instance}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "number",
+                        "inputFormat": "1",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectSolid",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "legendConfiguration": {
+                "enabled": true,
+                "position": "bottom",
+                "layout": "table",
+                "showCurrent": true,
+                "width": null,
+                "height": null
+            },
+            "axesConfiguration": {
+                "bottom": {
+                    "enabled": true
+                },
+                "left": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                },
+                "right": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                }
+            }
+        },
+        {
+            "id": 19,
+            "type": "advancedTimechart",
+            "name": "Disk Read Throughput",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "rate(node_disk_read_bytes_total{$__scope, device!=\"dm-0\"}[$__interval])",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Volume < Host",
+                        "timeSeriesDisplayNameTemplate": "{{device}} < {{instance}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "numberRate",
+                        "inputFormat": "/s",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectSolid",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "legendConfiguration": {
+                "enabled": true,
+                "position": "bottom",
+                "layout": "table",
+                "showCurrent": true,
+                "width": null,
+                "height": null
+            },
+            "axesConfiguration": {
+                "bottom": {
+                    "enabled": true
+                },
+                "left": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "/s",
+                    "maxInputFormat": "/s",
+                    "scale": "linear"
+                },
+                "right": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                }
+            }
+        },
+        {
+            "id": 20,
+            "type": "advancedTimechart",
+            "name": "Disk Write Throughput",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "rate(node_disk_written_bytes_total{$__scope, device!=\"dm-0\"}[$__interval])",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Volume < Host",
+                        "timeSeriesDisplayNameTemplate": "{{device}} < {{instance}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "numberRate",
+                        "inputFormat": "/s",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectSolid",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "legendConfiguration": {
+                "enabled": true,
+                "position": "bottom",
+                "layout": "table",
+                "showCurrent": true,
+                "width": null,
+                "height": null
+            },
+            "axesConfiguration": {
+                "bottom": {
+                    "enabled": true
+                },
+                "left": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "/s",
+                    "maxInputFormat": "/s",
+                    "scale": "linear"
+                },
+                "right": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                }
+            }
+        },
+        {
+            "id": 6,
+            "type": "advancedTimechart",
+            "name": "Network Received Throughput",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "rate(node_network_receive_bytes_total{$__scope, device!=\"lo\"}[$__interval])",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Iface < Host",
+                        "timeSeriesDisplayNameTemplate": "{{device}} < {{instance}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "byteRate",
+                        "inputFormat": "B/s",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "legendConfiguration": {
+                "enabled": true,
+                "position": "bottom",
+                "layout": "table",
+                "showCurrent": true,
+                "width": null,
+                "height": null
+            },
+            "axesConfiguration": {
+                "bottom": {
+                    "enabled": true
+                },
+                "left": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "B/s",
+                    "maxInputFormat": "B/s",
+                    "scale": "linear"
+                },
+                "right": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                }
+            }
+        },
+        {
+            "id": 8,
+            "type": "advancedTimechart",
+            "name": "Network Sent Throughput",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "rate(node_network_transmit_bytes_total{$__scope, device!=\"lo\"}[$__interval])",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Iface < Host",
+                        "timeSeriesDisplayNameTemplate": "{{device}} < {{instance}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "byteRate",
+                        "inputFormat": "B/s",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "legendConfiguration": {
+                "enabled": true,
+                "position": "bottom",
+                "layout": "table",
+                "showCurrent": true,
+                "width": null,
+                "height": null
+            },
+            "axesConfiguration": {
+                "bottom": {
+                    "enabled": true
+                },
+                "left": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "B/s",
+                    "maxInputFormat": "B/s",
+                    "scale": "linear"
+                },
+                "right": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                }
+            }
+        },
+        {
+            "id": 21,
+            "type": "advancedTimechart",
+            "name": "Network Inbound Error Rate",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "rate(node_network_receive_errs_total{$__scope, device!=\"lo\"}[$__interval])",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Iface < Host",
+                        "timeSeriesDisplayNameTemplate": "{{device}} < {{instance}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "byteRate",
+                        "inputFormat": "B/s",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "legendConfiguration": {
+                "enabled": true,
+                "position": "bottom",
+                "layout": "table",
+                "showCurrent": true,
+                "width": null,
+                "height": null
+            },
+            "axesConfiguration": {
+                "bottom": {
+                    "enabled": true
+                },
+                "left": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "B/s",
+                    "maxInputFormat": "B/s",
+                    "scale": "linear"
+                },
+                "right": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                }
+            }
+        },
+        {
+            "id": 22,
+            "type": "advancedTimechart",
+            "name": "Network Outbound Error Rate",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "rate(node_network_transmit_errs_total{$__scope, device!=\"lo\"}[$__interval])",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Iface < Host",
+                        "timeSeriesDisplayNameTemplate": "{{device}} < {{instance}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "byteRate",
+                        "inputFormat": "B/s",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "legendConfiguration": {
+                "enabled": true,
+                "position": "bottom",
+                "layout": "table",
+                "showCurrent": true,
+                "width": null,
+                "height": null
+            },
+            "axesConfiguration": {
+                "bottom": {
+                    "enabled": true
+                },
+                "left": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "B/s",
+                    "maxInputFormat": "B/s",
+                    "scale": "linear"
+                },
+                "right": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                }
+            }
+        },
+        {
+            "id": 24,
+            "type": "advancedTimechart",
+            "name": "Network Outbound Discard Rate",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "rate(node_network_transmit_drop_total{$__scope, device!=\"lo\"}[$__interval])",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Iface < Host",
+                        "timeSeriesDisplayNameTemplate": "{{device}} < {{instance}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "byteRate",
+                        "inputFormat": "B/s",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "legendConfiguration": {
+                "enabled": true,
+                "position": "bottom",
+                "layout": "table",
+                "showCurrent": true,
+                "width": null,
+                "height": null
+            },
+            "axesConfiguration": {
+                "bottom": {
+                    "enabled": true
+                },
+                "left": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "B/s",
+                    "maxInputFormat": "B/s",
+                    "scale": "linear"
+                },
+                "right": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                }
+            }
+        },
+        {
+            "id": 23,
+            "type": "advancedTimechart",
+            "name": "Network Inbound Discard Rate",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "rate(node_network_receive_drop_total{$__scope, device!=\"lo\"}[$__interval])",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Iface < Host",
+                        "timeSeriesDisplayNameTemplate": "{{device}} < {{instance}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "byteRate",
+                        "inputFormat": "B/s",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "legendConfiguration": {
+                "enabled": true,
+                "position": "bottom",
+                "layout": "table",
+                "showCurrent": true,
+                "width": null,
+                "height": null
+            },
+            "axesConfiguration": {
+                "bottom": {
+                    "enabled": true
+                },
+                "left": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "B/s",
+                    "maxInputFormat": "B/s",
+                    "scale": "linear"
+                },
+                "right": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                }
+            }
+        },
+        {
+            "id": 25,
+            "type": "advancedTimechart",
+            "name": "Network Received IOPS",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "rate(node_network_receive_packets_total{$__scope, device!=\"lo\"}[$__interval])",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Iface < Host",
+                        "timeSeriesDisplayNameTemplate": "{{device}} < {{instance}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "numberRate",
+                        "inputFormat": "/s",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "legendConfiguration": {
+                "enabled": true,
+                "position": "bottom",
+                "layout": "table",
+                "showCurrent": true,
+                "width": null,
+                "height": null
+            },
+            "axesConfiguration": {
+                "bottom": {
+                    "enabled": true
+                },
+                "left": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "/s",
+                    "maxInputFormat": "/s",
+                    "scale": "linear"
+                },
+                "right": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                }
+            }
+        },
+        {
+            "id": 26,
+            "type": "advancedTimechart",
+            "name": "Network Sent IOPS",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "rate(node_network_transmit_packets_total{$__scope, device!=\"lo\"}[$__interval])",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Iface < Host",
+                        "timeSeriesDisplayNameTemplate": "{{device}} < {{instance}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "numberRate",
+                        "inputFormat": "/s",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "legendConfiguration": {
+                "enabled": true,
+                "position": "bottom",
+                "layout": "table",
+                "showCurrent": true,
+                "width": null,
+                "height": null
+            },
+            "axesConfiguration": {
+                "bottom": {
+                    "enabled": true
+                },
+                "left": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "/s",
+                    "maxInputFormat": "/s",
+                    "scale": "linear"
+                },
+                "right": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                }
+            }
+        },
+        {
+            "id": 27,
+            "type": "advancedToplist",
+            "name": "Disk operations per sec",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "sum(rate(node_disk_reads_completed_total{$__scope, device!=\"dm-0\"}[$__interval]))",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Reads /s",
+                        "timeSeriesDisplayNameTemplate": "",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "numberRate",
+                        "inputFormat": "/s",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                },
+                {
+                    "query": "sum(rate(node_disk_writes_completed_total{$__scope, device!=\"dm-0\"}[$__interval]))",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Writes /s",
+                        "timeSeriesDisplayNameTemplate": "",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "%",
+                        "inputFormat": "0-100",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ]
+        },
+        {
+            "id": 11,
+            "type": "advancedToplist",
+            "name": "Disk size",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "sort_desc(sum(node_filesystem_size_bytes{$__scope}) by(device))",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Reads /s",
+                        "timeSeriesDisplayNameTemplate": "{{device}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "byte",
+                        "inputFormat": "B",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ]
+        }
+    ],
+    "scopeExpressionList": [
+        {
+            "operand": "job",
+            "operator": "equals",
+            "displayName": "",
+            "value": [
+                "powervs_linux_node_exporter"
+            ],
+            "descriptor": {
+                "documentId": "job",
+                "id": "job",
+                "metricType": "tag",
+                "type": "string",
+                "scale": 0.0,
+                "name": "job",
+                "description": "job",
+                "namespaces": [
+                    "cloudProvider",
+                    "host.container",
+                    "ecs",
+                    "host.fs",
+                    "host.file",
+                    "host",
+                    "kubernetes",
+                    "kubernetes.cluster",
+                    "kubernetes.daemonSet",
+                    "kubernetes.deployment",
+                    "kubernetes.job",
+                    "kubernetes.namespace",
+                    "kubernetes.node",
+                    "kubernetes.pod",
+                    "kubernetes.replicaSet",
+                    "kubernetes.service",
+                    "kubernetes.statefulSet",
+                    "kubernetes.resourcequota",
+                    "kubernetes.hpa",
+                    "link",
+                    "mesos",
+                    "host.net",
+                    "host.process",
+                    "prometheus",
+                    "swarm",
+                    "prombeacon"
+                ],
+                "scopes": [],
+                "timeAggregations": [
+                    "concat",
+                    "distinct",
+                    "count"
+                ],
+                "groupAggregations": [
+                    "concat",
+                    "distinct",
+                    "count"
+                ],
+                "aggregationForGroup": "none",
+                "hidden": false,
+                "experimental": false,
+                "deferred": false,
+                "identity": false,
+                "canMonitor": false,
+                "canGroupBy": false,
+                "canFilter": true,
+                "generatedFrom": "com.draios.model.metrics.custom.CustomMetric$Tag",
+                "publicId": "job",
+                "heuristic": false,
+                "documentType": "metric",
+                "segment": false,
+                "documentTimestamp": 1698682088753
+            },
+            "variable": false,
+            "isVariable": false
+        },
+        {
+            "operand": "instance",
+            "operator": "equals",
+            "displayName": "host",
+            "value": [
+                "linux-powervs.power-iaas.cloud.ibm.com"
+            ],
+            "descriptor": {
+                "documentId": "instance",
+                "id": "instance",
+                "metricType": "tag",
+                "type": "string",
+                "scale": 0.0,
+                "name": "instance",
+                "description": "instance",
+                "namespaces": [
+                    "cloudProvider",
+                    "host.container",
+                    "ecs",
+                    "host.fs",
+                    "host.file",
+                    "host",
+                    "kubernetes",
+                    "kubernetes.cluster",
+                    "kubernetes.daemonSet",
+                    "kubernetes.deployment",
+                    "kubernetes.job",
+                    "kubernetes.namespace",
+                    "kubernetes.node",
+                    "kubernetes.pod",
+                    "kubernetes.replicaSet",
+                    "kubernetes.service",
+                    "kubernetes.statefulSet",
+                    "kubernetes.resourcequota",
+                    "kubernetes.hpa",
+                    "link",
+                    "mesos",
+                    "host.net",
+                    "host.process",
+                    "prometheus",
+                    "swarm",
+                    "prombeacon"
+                ],
+                "scopes": [],
+                "timeAggregations": [
+                    "concat",
+                    "distinct",
+                    "count"
+                ],
+                "groupAggregations": [
+                    "concat",
+                    "distinct",
+                    "count"
+                ],
+                "aggregationForGroup": "none",
+                "hidden": false,
+                "experimental": false,
+                "deferred": false,
+                "identity": false,
+                "canMonitor": false,
+                "canGroupBy": false,
+                "canFilter": true,
+                "generatedFrom": "com.draios.model.metrics.custom.CustomMetric$Tag",
+                "publicId": "instance",
+                "heuristic": false,
+                "documentType": "metric",
+                "segment": false,
+                "documentTimestamp": 1698682088753
+            },
+            "variable": true,
+            "isVariable": true
+        }
+    ],
+    "eventDisplaySettings": {
+        "enabled": true,
+        "queryParams": {
+            "severities": [],
+            "alertStatuses": [],
+            "categories": [],
+            "filter": "",
+            "teamScope": false
+        }
+    },
+    "shared": false,
+    "public": true,
+    "version": 155,
+    "createdOn": 1698667224055,
+    "modifiedOn": 1698681578389,
+    "description": "",
+    "layout": [
+        {
+            "panelId": 7,
+            "x": 0,
+            "y": 16,
+            "w": 24,
+            "h": 1
+        },
+        {
+            "panelId": 12,
+            "x": 0,
+            "y": 29,
+            "w": 24,
+            "h": 1
+        },
+        {
+            "panelId": 1,
+            "x": 0,
+            "y": 2,
+            "w": 3,
+            "h": 2
+        },
+        {
+            "panelId": 2,
+            "x": 3,
+            "y": 2,
+            "w": 3,
+            "h": 2
+        },
+        {
+            "panelId": 3,
+            "x": 0,
+            "y": 0,
+            "w": 3,
+            "h": 2
+        },
+        {
+            "panelId": 4,
+            "x": 3,
+            "y": 0,
+            "w": 3,
+            "h": 2
+        },
+        {
+            "panelId": 5,
+            "x": 6,
+            "y": 0,
+            "w": 6,
+            "h": 4
+        },
+        {
+            "panelId": 9,
+            "x": 0,
+            "y": 10,
+            "w": 12,
+            "h": 6
+        },
+        {
+            "panelId": 13,
+            "x": 0,
+            "y": 17,
+            "w": 8,
+            "h": 6
+        },
+        {
+            "panelId": 14,
+            "x": 0,
+            "y": 23,
+            "w": 8,
+            "h": 6
+        },
+        {
+            "panelId": 10,
+            "x": 12,
+            "y": 4,
+            "w": 12,
+            "h": 6
+        },
+        {
+            "panelId": 15,
+            "x": 0,
+            "y": 4,
+            "w": 12,
+            "h": 6
+        },
+        {
+            "panelId": 16,
+            "x": 12,
+            "y": 10,
+            "w": 12,
+            "h": 6
+        },
+        {
+            "panelId": 17,
+            "x": 8,
+            "y": 17,
+            "w": 8,
+            "h": 6
+        },
+        {
+            "panelId": 18,
+            "x": 8,
+            "y": 23,
+            "w": 8,
+            "h": 6
+        },
+        {
+            "panelId": 19,
+            "x": 16,
+            "y": 17,
+            "w": 8,
+            "h": 6
+        },
+        {
+            "panelId": 20,
+            "x": 16,
+            "y": 23,
+            "w": 8,
+            "h": 6
+        },
+        {
+            "panelId": 6,
+            "x": 0,
+            "y": 30,
+            "w": 6,
+            "h": 6
+        },
+        {
+            "panelId": 8,
+            "x": 12,
+            "y": 30,
+            "w": 6,
+            "h": 6
+        },
+        {
+            "panelId": 21,
+            "x": 0,
+            "y": 36,
+            "w": 6,
+            "h": 6
+        },
+        {
+            "panelId": 22,
+            "x": 12,
+            "y": 36,
+            "w": 6,
+            "h": 6
+        },
+        {
+            "panelId": 24,
+            "x": 18,
+            "y": 36,
+            "w": 6,
+            "h": 6
+        },
+        {
+            "panelId": 23,
+            "x": 6,
+            "y": 36,
+            "w": 6,
+            "h": 6
+        },
+        {
+            "panelId": 25,
+            "x": 6,
+            "y": 30,
+            "w": 6,
+            "h": 6
+        },
+        {
+            "panelId": 26,
+            "x": 18,
+            "y": 30,
+            "w": 6,
+            "h": 6
+        },
+        {
+            "panelId": 27,
+            "x": 18,
+            "y": 0,
+            "w": 6,
+            "h": 4
+        },
+        {
+            "panelId": 11,
+            "x": 12,
+            "y": 0,
+            "w": 6,
+            "h": 4
+        }
+    ],
+    "sharingSettings": [],
+    "publicNotation": false,
+    "publicToken": "29b21a21c2b04e9d9fb43c2fb2689f4d",
+    "favorite": false,
+    "schema": 3,
+    "username": "Victor Guerrero (victor.guerrero@sysdig.com)",
+    "permissions": [
+        "dashboards.sharing",
+        "dashboards.edit",
+        "dashboards.read",
+        "dashboards.delete",
+        "dashboards.transfer"
+    ]
+}
