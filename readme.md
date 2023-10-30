@@ -25,7 +25,7 @@ https://github.com/sysdiglabs/ibm-powervs-monitoring/assets/7352160/7ae2c42b-024
 
 <img width="1919" alt="ibm-powervs-monitoring" src="https://github.com/sysdiglabs/ibm-powervs-monitoring/assets/7352160/15451781-e835-4233-b224-0aa363c35799">
 
-### Time-series comsumption and cost estimation
+### Time-series consumption and cost estimation
 
 The following table shows the estimated time-series consumption for a single node. The values may vary depending on the number of cores, devices and interfaces of the node.
 
@@ -37,7 +37,7 @@ The following table shows the estimated time-series consumption for a single nod
 | Filesystem | 7       | 7 x <# of devices>      |
 | Network    | 17      | 17 x <# of interfaces>  |
 
-For a node with 2 cores, 1 devices and 2 interfaces, the estimated time-series consumption is ~514 time-series.
+For a node with 2 cores, 1 device and 2 interfaces, the estimated time-series consumption is ~514 time-series.
 
 Based on the [pricing plans](https://cloud.ibm.com/docs/monitoring?topic=monitoring-pricing_plans), the estimated cost is **~$42 per month**.
 
