@@ -275,7 +275,7 @@ remote_write:
   bearer_token: "$key"
 
 scrape_configs:
-  - job_name: "node_exporter"
+  - job_name: "powervs_linux_node_exporter"
     static_configs:
       - targets: ["localhost:9100"]
     metric_relabel_configs:
