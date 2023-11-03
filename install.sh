@@ -233,7 +233,7 @@ After=network.target
 User=prometheus
 Group=prometheus
 Type=simple
-ExecStart=/usr/local/bin/prometheus --config.file=/etc/prometheus/prometheus.yml --storage.agent.path=/opt/prometheus --enable-feature=agent
+ExecStart=/usr/local/bin/prometheus --config.file=/etc/prometheus/prometheus.yml --storage.agent.path=/opt/prometheus --enable-feature=agent --web.listen-address="127.0.0.1:9090"
 
 [Install]
 WantedBy=multi-user.target
@@ -254,7 +254,8 @@ ExecStart=/usr/local/bin/node_exporter --collector.disable-defaults \
 --collector.diskstats \
 --collector.filesystem \
 --collector.meminfo \
---collector.netdev
+--collector.netdev \
+--web.listen-address="127.0.0.1:9100"
 
 [Install]
 WantedBy=multi-user.target
