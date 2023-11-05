@@ -68,7 +68,7 @@ uninstall() {
     /usr/sbin/userdel prometheus
     /usr/sbin/userdel node_exporter
     echo -e "[-] ${GREEN}OK${NC}"
-    exit 1
+    exit 0
 }
 
 while getopts r:t:p:n:uh flag
@@ -197,8 +197,8 @@ echo "[+] Creating Prometheus and Node Exporter users..."
 /usr/sbin/usermod -a -G node_exporter node_exporter &>/dev/null
 echo -e "[-] ${GREEN}OK${NC}"
 
-# make prometheus and node exporter exe/usr/bin/cutable
-echo "[+] Making Prometheus and Node Exporter exe/usr/bin/cutable..."
+# make prometheus and node exporter executable
+echo "[+] Making Prometheus and Node Exporter executable..."
 /usr/bin/chmod +x "$temp_dir/prometheus/prometheus-$prometheus.$arch/prometheus"
 /usr/bin/chmod +x "$temp_dir/node_exporter/node_exporter-$node_exporter.$arch/node_exporter"
 echo -e "[-] ${GREEN}OK${NC}"
