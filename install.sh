@@ -274,16 +274,17 @@ global:
 remote_write:
 - url: "$ingestion_endpoint"
   bearer_token: "$key"
+  write_relabel_configs:
+    - target_label: instance
+      replacement: '$(/usr/bin/hostname)'
 
 scrape_configs:
   - job_name: "powervs_linux_node_exporter"
     static_configs:
       - targets: ["localhost:9100"]
-    metric_relabel_configs:
-      - source_labels: [instance]
-        target_label: instance
-        regex: '(.*)'
-        replacement: '$(/usr/bin/hostname)'
+    relabel_configs:
+      - target_label: domain
+        replacement: 'POWERVS'
 EOF
 
 /usr/bin/chown prometheus:prometheus /etc/prometheus/prometheus.yml
