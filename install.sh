@@ -41,6 +41,9 @@ usage() {
   echo
   echo -e "\t -r: Cloud Monitor endpoint region. Required. Check the full list here: https://cloud.ibm.com/docs/monitoring?topic=monitoring-endpoints#endpoints_monitoring"
   echo -e "\t -t: Cloud Monitor API Key token. Required."
+  echo -e "\t -s: SAP instance IP and port(optional). I.E: 10.150.0.57:50210"
+  echo -e "\t -user: SAP control user"
+  echo -e "\t -password: SAP control password"
   echo -e "\t -p: Prometheus version. If not provided, the latest version will be installed."
   echo -e "\t -n: Node Exporter version. If not provided, the latest version will be installed(optional)."
   echo -e "\t -u: Uninstall Prometheus and Node Exporter and its dependencies(optional)."
@@ -71,11 +74,14 @@ uninstall() {
     exit 0
 }
 
-while getopts r:t:p:n:uh flag
+while getopts r:t:s:user:password:p:n:uh flag
 do
     case "${flag}" in
         r) endpoint=${OPTARG};;
         t) key=${OPTARG};;
+        s) sap=${OPTARG};;
+        user) user=${OPTARG};;
+        password) password=${OPTARG};;
         p) prometheus=${OPTARG};;
         n) node_exporter=${OPTARG};;
         u) uninstall;;
@@ -92,6 +98,14 @@ then
     exit 1
 fi
 
+# abort if sap user and password are not provide when SAP instance does
+if [ ! -n "$sap" ] && [[ -z "$user" ] || [ -z "$password"]]
+then
+    echo 'Missing SAP control user (-user) or SAP control password (-password)' >&2
+    usage
+    exit 1
+fi
+
 #install wget
 echo "[+] Checking if CURL is installed... "
 if command -v /usr/bin/curl &> /dev/null
@@ -100,6 +114,17 @@ then
 else
     echo "[+] CURL is not installed. Installing..."
     /usr/bin/yum install -y curl &> /dev/null
+    echo -e "\n[-] ${GREEN}OK${NC}"
+fi
+
+#install gunzip
+echo "[+] Checking if gunzip is installed... "
+if command -v /usr/bin/gunzip &> /dev/null
+then
+    echo -e "[-] ${GREEN}Gunzip is already installed. Continuing... ${NC}"
+else
+    echo "[+] Gunzip is not installed. Installing..."
+    /usr/bin/yum install -y gunzip &> /dev/null
     echo -e "\n[-] ${GREEN}OK${NC}"
 fi
 
@@ -113,6 +138,11 @@ if [ -z "$node_exporter" ]
 then #lastest version
     node_exporter=$(/usr/bin/curl -s https://api.github.com/repos/prometheus/node_exporter/releases/latest | /usr/bin/grep tag_name | /usr/bin/cut -d '"' -f 4)
     node_exporter=${node_exporter:1}
+fi
+
+if [ -z "$sap" ]
+then #set last SAP Host exporter version
+    sap_exporter=$(/usr/bin/curl -s https://api.github.com/repos/SUSE/sap_host_exporter/releases/latest | /usr/bin/grep tag_name | /usr/bin/cut -d '"' -f 4)
 fi
 
 # check credentials
@@ -173,10 +203,30 @@ fi
 
 echo -e "[-] ${GREEN}OK${NC}"
 
+# download SAP Host exporter
+if [ -z "$sap" ]
+then
+    echo "[+] Downloading SAP Host Exporter..."
+    /usr/bin/wget -q "https://github.com/SUSE/sap_host_exporter/releases/download/$sap_exporter/sap_host_exporter-ppc64le.gz" -O $temp_dir/sap_host_exporter.gz
+
+    # abort if the download failed
+    if [ $? -ne 0 ]
+    then
+    echo -e "[*] ${RED}ERROR: SAP Host Exporter cannot be downloaded or failed to download.${NC}" >&2
+    exit 1
+    fi
+
+    echo -e "[-] ${GREEN}OK${NC}"
+fi
+
 # make temp dir to extract prometheus and node exporter
 echo "[+] Creating temp directory..."
 /usr/bin/mkdir -p $temp_dir/prometheus
 /usr/bin/mkdir -p $temp_dir/node_exporter
+if [ -z "$sap" ]
+then
+    /usr/bin/mkdir -p $temp_dir/sap_host_exporter
+fi
 
 # if no $temp_dir found, abort
 cd $temp_dir || { echo -e "[*] ${RED}ERROR: No $temp_dir found.${NC}"; exit 1; }
@@ -184,27 +234,40 @@ cd $temp_dir || { echo -e "[*] ${RED}ERROR: No $temp_dir found.${NC}"; exit 1; }
 echo -e "[-] ${GREEN}OK${NC}"
 
 # extract prometheus and node exporter
-echo "[+] Extracting Prometheus and Node Exporter..."
-/usr/bin/tar xfz $temp_dir/prometheus.tar.gz -C $temp_dir/prometheus || { echo -e "[*] ${RED}ERROR! Extracting the prometheus tar.${NC}"; exit 1; }
-/usr/bin/tar xfz $temp_dir/node_exporter.tar.gz -C $temp_dir/node_exporter || { echo -e "[*] ${RED}ERROR! Extracting the node_exporter tar.${NC}"; exit 1; }
+echo "[+] Extracting Prometheus and exporters..."
+/usr/bin/tar xfz $temp_dir/prometheus.tar.gz -C $temp_dir/prometheus || { echo -e "[*] ${RED}ERROR! Extracting the Prometheus tar.${NC}"; exit 1; }
+/usr/bin/tar xfz $temp_dir/node_exporter.tar.gz -C $temp_dir/node_exporter || { echo -e "[*] ${RED}ERROR! Extracting the Node Exporter.${NC}"; exit 1; }
+if [ -z "$sap" ]
+then
+    /usr/bin/gunzip -c $temp_dir/sap_host_exporter.gz > $temp_dir/sap_host_exporter/sap_host_exporter || { echo -e "[*] ${RED}ERROR! Extracting the SAP Host Exporter.${NC}"; exit 1; }
+fi
 echo -e "[-] ${GREEN}OK${NC}"
 
 # create prometheus and node exporter users
-echo "[+] Creating Prometheus and Node Exporter users..."
+echo "[+] Creating system users users..."
 /usr/sbin/useradd --no-create-home --shell /bin/false prometheus &>/dev/null
 /usr/sbin/useradd --no-create-home --shell /bin/false node_exporter &>/dev/null
 /usr/sbin/usermod -a -G prometheus prometheus &>/dev/null
 /usr/sbin/usermod -a -G node_exporter node_exporter &>/dev/null
+if [ -z "$sap" ]
+then
+    /usr/sbin/useradd --no-create-home --shell /bin/false sap_host_exporter &>/dev/null
+    /usr/sbin/usermod -a -G sap_host_exporter sap_host_exporter &>/dev/null
+fi
 echo -e "[-] ${GREEN}OK${NC}"
 
 # make prometheus and node exporter executable
-echo "[+] Making Prometheus and Node Exporter executable..."
+echo "[+] Making Prometheus and exporters executable..."
 /usr/bin/chmod +x "$temp_dir/prometheus/prometheus-$prometheus.$arch/prometheus"
 /usr/bin/chmod +x "$temp_dir/node_exporter/node_exporter-$node_exporter.$arch/node_exporter"
+if [ -z "$sap" ]
+then
+    /usr/bin/chmod +x "$temp_dir/sap_host_exporter/sap_host_exporter"
+fi
 echo -e "[-] ${GREEN}OK${NC}"
 
 # change prometheus and node exporter ownership
-echo "[+] Changing Prometheus and Node Exporter ownership..."
+echo "[+] Changing Prometheus and exporters ownership..."
 /usr/bin/chown prometheus:prometheus "$temp_dir/prometheus/prometheus-$prometheus.$arch/prometheus"
 /usr/bin/chown node_exporter:node_exporter "$temp_dir/node_exporter/node_exporter-$node_exporter.$arch/node_exporter"
 echo -e "[-] ${GREEN}OK${NC}"
