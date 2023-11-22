@@ -1,0 +1,2225 @@
+{
+    "id": 3436,
+    "teamId": 280,
+    "userId": 391,
+    "name": "SAP HANA Host",
+    "panels": [
+        {
+            "id": 6,
+            "type": "advancedTimechart",
+            "name": "Instance status",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "count(sap_start_service_instances{$__scope} == 1) or vector(0)",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Instance status",
+                        "timeSeriesDisplayNameTemplate": "Gray",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "number",
+                        "inputFormat": "1",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                },
+                {
+                    "query": "count(sap_start_service_instances{$__scope} == 2) or vector(0)",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Instance status",
+                        "timeSeriesDisplayNameTemplate": "Green",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "number",
+                        "inputFormat": "1",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                },
+                {
+                    "query": "count(sap_start_service_instances{$__scope} == 3) or vector(0)",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Instance status",
+                        "timeSeriesDisplayNameTemplate": "Yellow",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "number",
+                        "inputFormat": "1",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                },
+                {
+                    "query": "count(sap_start_service_instances{$__scope} == 4) or vector(0)",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Instance status",
+                        "timeSeriesDisplayNameTemplate": "Red",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "number",
+                        "inputFormat": "1",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "legendConfiguration": {
+                "enabled": true,
+                "position": "right",
+                "layout": "table",
+                "showCurrent": true,
+                "width": null,
+                "height": null
+            },
+            "axesConfiguration": {
+                "bottom": {
+                    "enabled": true
+                },
+                "left": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                },
+                "right": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                }
+            }
+        },
+        {
+            "id": 8,
+            "type": "advancedTimechart",
+            "name": "Lock tables entries",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "sap_enqueue_server_locks_now{$__scope}",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Locks | Domain > Host > Instance > ID",
+                        "timeSeriesDisplayNameTemplate": "{{domain}} > {{instance_hostname}} > {{instance_name}} > {{SID}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "number",
+                        "inputFormat": "1",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                },
+                {
+                    "query": "sap_enqueue_server_owner_now{$__scope}",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Lock owners | Domain > Host > Instance > ID",
+                        "timeSeriesDisplayNameTemplate": "{{domain}} > {{instance_hostname}} > {{instance_name}} > {{SID}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "number",
+                        "inputFormat": "1",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                },
+                {
+                    "query": "sap_enqueue_server_arguments_now{$__scope}",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Lock arguments | Domain > Host > Instance > ID",
+                        "timeSeriesDisplayNameTemplate": "{{domain}} > {{instance_hostname}} > {{instance_name}} > {{SID}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "number",
+                        "inputFormat": "1",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "legendConfiguration": {
+                "enabled": true,
+                "position": "bottom",
+                "layout": "table",
+                "showCurrent": true,
+                "width": null,
+                "height": null
+            },
+            "axesConfiguration": {
+                "bottom": {
+                    "enabled": true
+                },
+                "left": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                },
+                "right": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                }
+            }
+        },
+        {
+            "id": 10,
+            "type": "text",
+            "name": "Enqueue Server",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "markdownSource": "# Enqueue Server",
+            "transparentBackground": false,
+            "panelTitleVisible": false,
+            "textAutosized": false
+        },
+        {
+            "id": 11,
+            "type": "text",
+            "name": "Work process dispatcher",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "markdownSource": "# Work process dispatcher",
+            "transparentBackground": false,
+            "panelTitleVisible": false,
+            "textAutosized": false
+        },
+        {
+            "id": 14,
+            "type": "advancedTimechart",
+            "name": "Dispatcher queue high",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "sap_dispatcher_queue_high",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Domain > Host > Instance > ID",
+                        "timeSeriesDisplayNameTemplate": "{{domain}} > {{instance_hostname}} > {{instance_name}} > {{SID}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "byte",
+                        "inputFormat": "MiB",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "legendConfiguration": {
+                "enabled": true,
+                "position": "bottom",
+                "layout": "table",
+                "showCurrent": true,
+                "width": null,
+                "height": null
+            },
+            "axesConfiguration": {
+                "bottom": {
+                    "enabled": true
+                },
+                "left": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "B",
+                    "maxInputFormat": "B",
+                    "scale": "linear"
+                },
+                "right": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                }
+            }
+        },
+        {
+            "id": 5,
+            "type": "basicTable",
+            "name": "Instance status",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "basicQueries": [
+                {
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Status",
+                        "timeSeriesDisplayNameTemplate": "",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "number",
+                        "inputFormat": "1",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "scope": {
+                        "expressions": [],
+                        "extendsDashboardScope": true
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    },
+                    "metrics": [
+                        {
+                            "id": "sap_start_service_instances",
+                            "timeAggregation": "avg",
+                            "groupAggregation": "sum",
+                            "descriptor": {
+                                "documentId": "prombeacon.sap_start_service_instances",
+                                "id": "sap_start_service_instances",
+                                "metricType": "gauge",
+                                "type": "number",
+                                "scale": 1.0,
+                                "name": "sap_start_service_instances",
+                                "description": "The SAP instances in the context of the whole SAP system",
+                                "category": "prometheus",
+                                "namespaces": [
+                                    "prombeacon"
+                                ],
+                                "scopes": [],
+                                "timeAggregations": [
+                                    "avg",
+                                    "min",
+                                    "max"
+                                ],
+                                "groupAggregations": [
+                                    "avg",
+                                    "sum",
+                                    "min",
+                                    "max"
+                                ],
+                                "aggregationForGroup": "avg",
+                                "lastSeen": 1700626139000,
+                                "hidden": false,
+                                "experimental": false,
+                                "deferred": false,
+                                "identity": false,
+                                "canMonitor": false,
+                                "canGroupBy": false,
+                                "canFilter": false,
+                                "generatedFrom": "com.draios.model.metrics.custom.PrometheusRawMetric",
+                                "publicId": "sap_start_service_instances",
+                                "legacyId": "sap_start_service_instances",
+                                "heuristic": false,
+                                "documentType": "metric",
+                                "segment": false,
+                                "documentTimestamp": 1700665915133
+                            },
+                            "sorting": null
+                        }
+                    ],
+                    "displayedValue": "entireRange",
+                    "segmentation": {
+                        "labels": [
+                            {
+                                "id": "SID",
+                                "descriptor": {
+                                    "documentId": "SID",
+                                    "id": "SID",
+                                    "metricType": "tag",
+                                    "type": "string",
+                                    "scale": 0.0,
+                                    "name": "SID",
+                                    "description": "SID",
+                                    "namespaces": [
+                                        "cloudProvider",
+                                        "host.container",
+                                        "ecs",
+                                        "host.fs",
+                                        "host.file",
+                                        "host",
+                                        "kubernetes",
+                                        "kubernetes.cluster",
+                                        "kubernetes.daemonSet",
+                                        "kubernetes.deployment",
+                                        "kubernetes.job",
+                                        "kubernetes.namespace",
+                                        "kubernetes.node",
+                                        "kubernetes.pod",
+                                        "kubernetes.replicaSet",
+                                        "kubernetes.service",
+                                        "kubernetes.statefulSet",
+                                        "kubernetes.resourcequota",
+                                        "kubernetes.hpa",
+                                        "link",
+                                        "mesos",
+                                        "host.net",
+                                        "host.process",
+                                        "prometheus",
+                                        "swarm",
+                                        "prombeacon"
+                                    ],
+                                    "scopes": [],
+                                    "timeAggregations": [
+                                        "concat",
+                                        "distinct",
+                                        "count"
+                                    ],
+                                    "groupAggregations": [
+                                        "concat",
+                                        "distinct",
+                                        "count"
+                                    ],
+                                    "aggregationForGroup": "none",
+                                    "hidden": false,
+                                    "experimental": false,
+                                    "deferred": false,
+                                    "identity": false,
+                                    "canMonitor": false,
+                                    "canGroupBy": false,
+                                    "canFilter": true,
+                                    "generatedFrom": "com.draios.model.metrics.custom.CustomMetric$Tag",
+                                    "publicId": "SID",
+                                    "heuristic": false,
+                                    "documentType": "metric",
+                                    "segment": false,
+                                    "documentTimestamp": 1700665915133
+                                },
+                                "displayName": "",
+                                "sorting": null
+                            },
+                            {
+                                "id": "features",
+                                "descriptor": {
+                                    "documentId": "features",
+                                    "id": "features",
+                                    "metricType": "tag",
+                                    "type": "string",
+                                    "scale": 0.0,
+                                    "name": "features",
+                                    "description": "features",
+                                    "namespaces": [
+                                        "cloudProvider",
+                                        "host.container",
+                                        "ecs",
+                                        "host.fs",
+                                        "host.file",
+                                        "host",
+                                        "kubernetes",
+                                        "kubernetes.cluster",
+                                        "kubernetes.daemonSet",
+                                        "kubernetes.deployment",
+                                        "kubernetes.job",
+                                        "kubernetes.namespace",
+                                        "kubernetes.node",
+                                        "kubernetes.pod",
+                                        "kubernetes.replicaSet",
+                                        "kubernetes.service",
+                                        "kubernetes.statefulSet",
+                                        "kubernetes.resourcequota",
+                                        "kubernetes.hpa",
+                                        "link",
+                                        "mesos",
+                                        "host.net",
+                                        "host.process",
+                                        "prometheus",
+                                        "swarm",
+                                        "prombeacon"
+                                    ],
+                                    "scopes": [],
+                                    "timeAggregations": [
+                                        "concat",
+                                        "distinct",
+                                        "count"
+                                    ],
+                                    "groupAggregations": [
+                                        "concat",
+                                        "distinct",
+                                        "count"
+                                    ],
+                                    "aggregationForGroup": "none",
+                                    "hidden": false,
+                                    "experimental": false,
+                                    "deferred": false,
+                                    "identity": false,
+                                    "canMonitor": false,
+                                    "canGroupBy": false,
+                                    "canFilter": true,
+                                    "generatedFrom": "com.draios.model.metrics.custom.CustomMetric$Tag",
+                                    "publicId": "features",
+                                    "heuristic": false,
+                                    "documentType": "metric",
+                                    "segment": false,
+                                    "documentTimestamp": 1700665915133
+                                },
+                                "displayName": "Features",
+                                "sorting": null
+                            },
+                            {
+                                "id": "instance_hostname",
+                                "descriptor": {
+                                    "documentId": "instance_hostname",
+                                    "id": "instance_hostname",
+                                    "metricType": "tag",
+                                    "type": "string",
+                                    "scale": 0.0,
+                                    "name": "instance_hostname",
+                                    "description": "instance_hostname",
+                                    "namespaces": [
+                                        "cloudProvider",
+                                        "host.container",
+                                        "ecs",
+                                        "host.fs",
+                                        "host.file",
+                                        "host",
+                                        "kubernetes",
+                                        "kubernetes.cluster",
+                                        "kubernetes.daemonSet",
+                                        "kubernetes.deployment",
+                                        "kubernetes.job",
+                                        "kubernetes.namespace",
+                                        "kubernetes.node",
+                                        "kubernetes.pod",
+                                        "kubernetes.replicaSet",
+                                        "kubernetes.service",
+                                        "kubernetes.statefulSet",
+                                        "kubernetes.resourcequota",
+                                        "kubernetes.hpa",
+                                        "link",
+                                        "mesos",
+                                        "host.net",
+                                        "host.process",
+                                        "prometheus",
+                                        "swarm",
+                                        "prombeacon"
+                                    ],
+                                    "scopes": [],
+                                    "timeAggregations": [
+                                        "concat",
+                                        "distinct",
+                                        "count"
+                                    ],
+                                    "groupAggregations": [
+                                        "concat",
+                                        "distinct",
+                                        "count"
+                                    ],
+                                    "aggregationForGroup": "none",
+                                    "hidden": false,
+                                    "experimental": false,
+                                    "deferred": false,
+                                    "identity": false,
+                                    "canMonitor": false,
+                                    "canGroupBy": false,
+                                    "canFilter": true,
+                                    "generatedFrom": "com.draios.model.metrics.custom.CustomMetric$Tag",
+                                    "publicId": "instance_hostname",
+                                    "heuristic": false,
+                                    "documentType": "metric",
+                                    "segment": false,
+                                    "documentTimestamp": 1700665915133
+                                },
+                                "displayName": "Hostname",
+                                "sorting": null
+                            },
+                            {
+                                "id": "instance_name",
+                                "descriptor": {
+                                    "documentId": "instance_name",
+                                    "id": "instance_name",
+                                    "metricType": "tag",
+                                    "type": "string",
+                                    "scale": 0.0,
+                                    "name": "instance_name",
+                                    "description": "instance_name",
+                                    "namespaces": [
+                                        "cloudProvider",
+                                        "host.container",
+                                        "ecs",
+                                        "host.fs",
+                                        "host.file",
+                                        "host",
+                                        "kubernetes",
+                                        "kubernetes.cluster",
+                                        "kubernetes.daemonSet",
+                                        "kubernetes.deployment",
+                                        "kubernetes.job",
+                                        "kubernetes.namespace",
+                                        "kubernetes.node",
+                                        "kubernetes.pod",
+                                        "kubernetes.replicaSet",
+                                        "kubernetes.service",
+                                        "kubernetes.statefulSet",
+                                        "kubernetes.resourcequota",
+                                        "kubernetes.hpa",
+                                        "link",
+                                        "mesos",
+                                        "host.net",
+                                        "host.process",
+                                        "prometheus",
+                                        "swarm",
+                                        "prombeacon"
+                                    ],
+                                    "scopes": [],
+                                    "timeAggregations": [
+                                        "concat",
+                                        "distinct",
+                                        "count"
+                                    ],
+                                    "groupAggregations": [
+                                        "concat",
+                                        "distinct",
+                                        "count"
+                                    ],
+                                    "aggregationForGroup": "none",
+                                    "hidden": false,
+                                    "experimental": false,
+                                    "deferred": false,
+                                    "identity": false,
+                                    "canMonitor": false,
+                                    "canGroupBy": false,
+                                    "canFilter": true,
+                                    "generatedFrom": "com.draios.model.metrics.custom.CustomMetric$Tag",
+                                    "publicId": "instance_name",
+                                    "heuristic": false,
+                                    "documentType": "metric",
+                                    "segment": false,
+                                    "documentTimestamp": 1700665915133
+                                },
+                                "displayName": "Name",
+                                "sorting": null
+                            },
+                            {
+                                "id": "instance_number",
+                                "descriptor": {
+                                    "documentId": "instance_number",
+                                    "id": "instance_number",
+                                    "metricType": "tag",
+                                    "type": "string",
+                                    "scale": 0.0,
+                                    "name": "instance_number",
+                                    "description": "instance_number",
+                                    "namespaces": [
+                                        "cloudProvider",
+                                        "host.container",
+                                        "ecs",
+                                        "host.fs",
+                                        "host.file",
+                                        "host",
+                                        "kubernetes",
+                                        "kubernetes.cluster",
+                                        "kubernetes.daemonSet",
+                                        "kubernetes.deployment",
+                                        "kubernetes.job",
+                                        "kubernetes.namespace",
+                                        "kubernetes.node",
+                                        "kubernetes.pod",
+                                        "kubernetes.replicaSet",
+                                        "kubernetes.service",
+                                        "kubernetes.statefulSet",
+                                        "kubernetes.resourcequota",
+                                        "kubernetes.hpa",
+                                        "link",
+                                        "mesos",
+                                        "host.net",
+                                        "host.process",
+                                        "prometheus",
+                                        "swarm",
+                                        "prombeacon"
+                                    ],
+                                    "scopes": [],
+                                    "timeAggregations": [
+                                        "concat",
+                                        "distinct",
+                                        "count"
+                                    ],
+                                    "groupAggregations": [
+                                        "concat",
+                                        "distinct",
+                                        "count"
+                                    ],
+                                    "aggregationForGroup": "none",
+                                    "hidden": false,
+                                    "experimental": false,
+                                    "deferred": false,
+                                    "identity": false,
+                                    "canMonitor": false,
+                                    "canGroupBy": false,
+                                    "canFilter": true,
+                                    "generatedFrom": "com.draios.model.metrics.custom.CustomMetric$Tag",
+                                    "publicId": "instance_number",
+                                    "heuristic": false,
+                                    "documentType": "metric",
+                                    "segment": false,
+                                    "documentTimestamp": 1700665915133
+                                },
+                                "displayName": "Number",
+                                "sorting": null
+                            },
+                            {
+                                "id": "start_priority",
+                                "descriptor": {
+                                    "documentId": "start_priority",
+                                    "id": "start_priority",
+                                    "metricType": "tag",
+                                    "type": "string",
+                                    "scale": 0.0,
+                                    "name": "start_priority",
+                                    "description": "start_priority",
+                                    "namespaces": [
+                                        "cloudProvider",
+                                        "host.container",
+                                        "ecs",
+                                        "host.fs",
+                                        "host.file",
+                                        "host",
+                                        "kubernetes",
+                                        "kubernetes.cluster",
+                                        "kubernetes.daemonSet",
+                                        "kubernetes.deployment",
+                                        "kubernetes.job",
+                                        "kubernetes.namespace",
+                                        "kubernetes.node",
+                                        "kubernetes.pod",
+                                        "kubernetes.replicaSet",
+                                        "kubernetes.service",
+                                        "kubernetes.statefulSet",
+                                        "kubernetes.resourcequota",
+                                        "kubernetes.hpa",
+                                        "link",
+                                        "mesos",
+                                        "host.net",
+                                        "host.process",
+                                        "prometheus",
+                                        "swarm",
+                                        "prombeacon"
+                                    ],
+                                    "scopes": [],
+                                    "timeAggregations": [
+                                        "concat",
+                                        "distinct",
+                                        "count"
+                                    ],
+                                    "groupAggregations": [
+                                        "concat",
+                                        "distinct",
+                                        "count"
+                                    ],
+                                    "aggregationForGroup": "none",
+                                    "hidden": false,
+                                    "experimental": false,
+                                    "deferred": false,
+                                    "identity": false,
+                                    "canMonitor": false,
+                                    "canGroupBy": false,
+                                    "canFilter": true,
+                                    "generatedFrom": "com.draios.model.metrics.custom.CustomMetric$Tag",
+                                    "publicId": "start_priority",
+                                    "heuristic": false,
+                                    "documentType": "metric",
+                                    "segment": false,
+                                    "documentTimestamp": 1700665915133
+                                },
+                                "displayName": "Start priority",
+                                "sorting": null
+                            }
+                        ],
+                        "limit": 10,
+                        "direction": "desc"
+                    }
+                }
+            ]
+        },
+        {
+            "id": 30,
+            "type": "basicTable",
+            "name": "Processes",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "basicQueries": [
+                {
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Code",
+                        "timeSeriesDisplayNameTemplate": "",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "number",
+                        "inputFormat": "1",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "scope": {
+                        "expressions": [],
+                        "extendsDashboardScope": true
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    },
+                    "metrics": [
+                        {
+                            "id": "sap_start_service_processes",
+                            "timeAggregation": "avg",
+                            "groupAggregation": "avg",
+                            "descriptor": {
+                                "documentId": "prombeacon.sap_start_service_processes",
+                                "id": "sap_start_service_processes",
+                                "metricType": "gauge",
+                                "type": "number",
+                                "scale": 1.0,
+                                "name": "sap_start_service_processes",
+                                "description": "The processes started by the SAP Start Service",
+                                "category": "prometheus",
+                                "namespaces": [
+                                    "prombeacon"
+                                ],
+                                "scopes": [],
+                                "timeAggregations": [
+                                    "avg",
+                                    "min",
+                                    "max"
+                                ],
+                                "groupAggregations": [
+                                    "avg",
+                                    "sum",
+                                    "min",
+                                    "max"
+                                ],
+                                "aggregationForGroup": "avg",
+                                "lastSeen": 1700626139000,
+                                "hidden": false,
+                                "experimental": false,
+                                "deferred": false,
+                                "identity": false,
+                                "canMonitor": false,
+                                "canGroupBy": false,
+                                "canFilter": false,
+                                "generatedFrom": "com.draios.model.metrics.custom.PrometheusRawMetric",
+                                "publicId": "sap_start_service_processes",
+                                "legacyId": "sap_start_service_processes",
+                                "heuristic": false,
+                                "documentType": "metric",
+                                "segment": false,
+                                "documentTimestamp": 1700665915134
+                            },
+                            "sorting": null
+                        }
+                    ],
+                    "displayedValue": "entireRange",
+                    "segmentation": {
+                        "labels": [
+                            {
+                                "id": "instance_name",
+                                "descriptor": {
+                                    "documentId": "instance_name",
+                                    "id": "instance_name",
+                                    "metricType": "tag",
+                                    "type": "string",
+                                    "scale": 0.0,
+                                    "name": "instance_name",
+                                    "description": "instance_name",
+                                    "namespaces": [
+                                        "cloudProvider",
+                                        "host.container",
+                                        "ecs",
+                                        "host.fs",
+                                        "host.file",
+                                        "host",
+                                        "kubernetes",
+                                        "kubernetes.cluster",
+                                        "kubernetes.daemonSet",
+                                        "kubernetes.deployment",
+                                        "kubernetes.job",
+                                        "kubernetes.namespace",
+                                        "kubernetes.node",
+                                        "kubernetes.pod",
+                                        "kubernetes.replicaSet",
+                                        "kubernetes.service",
+                                        "kubernetes.statefulSet",
+                                        "kubernetes.resourcequota",
+                                        "kubernetes.hpa",
+                                        "link",
+                                        "mesos",
+                                        "host.net",
+                                        "host.process",
+                                        "prometheus",
+                                        "swarm",
+                                        "prombeacon"
+                                    ],
+                                    "scopes": [],
+                                    "timeAggregations": [
+                                        "concat",
+                                        "distinct",
+                                        "count"
+                                    ],
+                                    "groupAggregations": [
+                                        "concat",
+                                        "distinct",
+                                        "count"
+                                    ],
+                                    "aggregationForGroup": "none",
+                                    "hidden": false,
+                                    "experimental": false,
+                                    "deferred": false,
+                                    "identity": false,
+                                    "canMonitor": false,
+                                    "canGroupBy": false,
+                                    "canFilter": true,
+                                    "generatedFrom": "com.draios.model.metrics.custom.CustomMetric$Tag",
+                                    "publicId": "instance_name",
+                                    "heuristic": false,
+                                    "documentType": "metric",
+                                    "segment": false,
+                                    "documentTimestamp": 1700665915134
+                                },
+                                "displayName": "Instance name",
+                                "sorting": null
+                            },
+                            {
+                                "id": "instance_number",
+                                "descriptor": {
+                                    "documentId": "instance_number",
+                                    "id": "instance_number",
+                                    "metricType": "tag",
+                                    "type": "string",
+                                    "scale": 0.0,
+                                    "name": "instance_number",
+                                    "description": "instance_number",
+                                    "namespaces": [
+                                        "cloudProvider",
+                                        "host.container",
+                                        "ecs",
+                                        "host.fs",
+                                        "host.file",
+                                        "host",
+                                        "kubernetes",
+                                        "kubernetes.cluster",
+                                        "kubernetes.daemonSet",
+                                        "kubernetes.deployment",
+                                        "kubernetes.job",
+                                        "kubernetes.namespace",
+                                        "kubernetes.node",
+                                        "kubernetes.pod",
+                                        "kubernetes.replicaSet",
+                                        "kubernetes.service",
+                                        "kubernetes.statefulSet",
+                                        "kubernetes.resourcequota",
+                                        "kubernetes.hpa",
+                                        "link",
+                                        "mesos",
+                                        "host.net",
+                                        "host.process",
+                                        "prometheus",
+                                        "swarm",
+                                        "prombeacon"
+                                    ],
+                                    "scopes": [],
+                                    "timeAggregations": [
+                                        "concat",
+                                        "distinct",
+                                        "count"
+                                    ],
+                                    "groupAggregations": [
+                                        "concat",
+                                        "distinct",
+                                        "count"
+                                    ],
+                                    "aggregationForGroup": "none",
+                                    "hidden": false,
+                                    "experimental": false,
+                                    "deferred": false,
+                                    "identity": false,
+                                    "canMonitor": false,
+                                    "canGroupBy": false,
+                                    "canFilter": true,
+                                    "generatedFrom": "com.draios.model.metrics.custom.CustomMetric$Tag",
+                                    "publicId": "instance_number",
+                                    "heuristic": false,
+                                    "documentType": "metric",
+                                    "segment": false,
+                                    "documentTimestamp": 1700665915134
+                                },
+                                "displayName": "Instance number",
+                                "sorting": null
+                            },
+                            {
+                                "id": "kubernetes.persistentvolume.claim.ref.name",
+                                "descriptor": {
+                                    "documentId": "kubernetes.persistentvolume.claim.ref.name",
+                                    "id": "kubernetes.persistentvolume.claim.ref.name",
+                                    "metricType": "tag",
+                                    "type": "string",
+                                    "scale": 0.0,
+                                    "name": "kubernetes.persistentvolume.claim.ref.name",
+                                    "description": "kubernetes.persistentvolume.claim.ref.name",
+                                    "namespaces": [
+                                        "cloudProvider",
+                                        "host.container",
+                                        "ecs",
+                                        "host.fs",
+                                        "host.file",
+                                        "host",
+                                        "kubernetes",
+                                        "kubernetes.cluster",
+                                        "kubernetes.daemonSet",
+                                        "kubernetes.deployment",
+                                        "kubernetes.job",
+                                        "kubernetes.namespace",
+                                        "kubernetes.node",
+                                        "kubernetes.pod",
+                                        "kubernetes.replicaSet",
+                                        "kubernetes.service",
+                                        "kubernetes.statefulSet",
+                                        "kubernetes.resourcequota",
+                                        "kubernetes.hpa",
+                                        "link",
+                                        "mesos",
+                                        "host.net",
+                                        "host.process",
+                                        "prometheus",
+                                        "swarm",
+                                        "prombeacon"
+                                    ],
+                                    "scopes": [],
+                                    "timeAggregations": [
+                                        "concat",
+                                        "distinct",
+                                        "count"
+                                    ],
+                                    "groupAggregations": [
+                                        "concat",
+                                        "distinct",
+                                        "count"
+                                    ],
+                                    "aggregationForGroup": "none",
+                                    "hidden": false,
+                                    "experimental": false,
+                                    "deferred": false,
+                                    "identity": false,
+                                    "canMonitor": false,
+                                    "canGroupBy": true,
+                                    "canFilter": true,
+                                    "generatedFrom": "com.draios.model.metrics.custom.CustomMetric$Tag",
+                                    "publicId": "name",
+                                    "heuristic": false,
+                                    "documentType": "metric",
+                                    "segment": false,
+                                    "documentTimestamp": 1700665915134
+                                },
+                                "displayName": "Process name",
+                                "sorting": null
+                            },
+                            {
+                                "id": "pid",
+                                "descriptor": {
+                                    "documentId": "pid",
+                                    "id": "pid",
+                                    "metricType": "tag",
+                                    "type": "string",
+                                    "scale": 0.0,
+                                    "name": "pid",
+                                    "description": "pid",
+                                    "namespaces": [
+                                        "cloudProvider",
+                                        "host.container",
+                                        "ecs",
+                                        "host.fs",
+                                        "host.file",
+                                        "host",
+                                        "kubernetes",
+                                        "kubernetes.cluster",
+                                        "kubernetes.daemonSet",
+                                        "kubernetes.deployment",
+                                        "kubernetes.job",
+                                        "kubernetes.namespace",
+                                        "kubernetes.node",
+                                        "kubernetes.pod",
+                                        "kubernetes.replicaSet",
+                                        "kubernetes.service",
+                                        "kubernetes.statefulSet",
+                                        "kubernetes.resourcequota",
+                                        "kubernetes.hpa",
+                                        "link",
+                                        "mesos",
+                                        "host.net",
+                                        "host.process",
+                                        "prometheus",
+                                        "swarm",
+                                        "prombeacon"
+                                    ],
+                                    "scopes": [],
+                                    "timeAggregations": [
+                                        "concat",
+                                        "distinct",
+                                        "count"
+                                    ],
+                                    "groupAggregations": [
+                                        "concat",
+                                        "distinct",
+                                        "count"
+                                    ],
+                                    "aggregationForGroup": "none",
+                                    "hidden": false,
+                                    "experimental": false,
+                                    "deferred": false,
+                                    "identity": false,
+                                    "canMonitor": false,
+                                    "canGroupBy": false,
+                                    "canFilter": true,
+                                    "generatedFrom": "com.draios.model.metrics.custom.CustomMetric$Tag",
+                                    "publicId": "pid",
+                                    "heuristic": false,
+                                    "documentType": "metric",
+                                    "segment": false,
+                                    "documentTimestamp": 1700665915134
+                                },
+                                "displayName": "PID",
+                                "sorting": null
+                            },
+                            {
+                                "id": "kubernetes.persistentvolumeclaim.condition.status",
+                                "descriptor": {
+                                    "documentId": "kubernetes.persistentvolumeclaim.condition.status",
+                                    "id": "kubernetes.persistentvolumeclaim.condition.status",
+                                    "metricType": "tag",
+                                    "type": "string",
+                                    "scale": 0.0,
+                                    "name": "kubernetes.persistentvolumeclaim.condition.status",
+                                    "description": "kubernetes.persistentvolumeclaim.condition.status",
+                                    "namespaces": [
+                                        "cloudProvider",
+                                        "host.container",
+                                        "ecs",
+                                        "host.fs",
+                                        "host.file",
+                                        "host",
+                                        "kubernetes",
+                                        "kubernetes.cluster",
+                                        "kubernetes.daemonSet",
+                                        "kubernetes.deployment",
+                                        "kubernetes.job",
+                                        "kubernetes.namespace",
+                                        "kubernetes.node",
+                                        "kubernetes.pod",
+                                        "kubernetes.replicaSet",
+                                        "kubernetes.service",
+                                        "kubernetes.statefulSet",
+                                        "kubernetes.resourcequota",
+                                        "kubernetes.hpa",
+                                        "link",
+                                        "mesos",
+                                        "host.net",
+                                        "host.process",
+                                        "prometheus",
+                                        "swarm",
+                                        "prombeacon"
+                                    ],
+                                    "scopes": [],
+                                    "timeAggregations": [
+                                        "concat",
+                                        "distinct",
+                                        "count"
+                                    ],
+                                    "groupAggregations": [
+                                        "concat",
+                                        "distinct",
+                                        "count"
+                                    ],
+                                    "aggregationForGroup": "none",
+                                    "hidden": false,
+                                    "experimental": false,
+                                    "deferred": false,
+                                    "identity": false,
+                                    "canMonitor": false,
+                                    "canGroupBy": true,
+                                    "canFilter": true,
+                                    "generatedFrom": "com.draios.model.metrics.custom.CustomMetric$Tag",
+                                    "publicId": "status",
+                                    "heuristic": false,
+                                    "documentType": "metric",
+                                    "segment": false,
+                                    "documentTimestamp": 1700665915134
+                                },
+                                "displayName": "Status",
+                                "sorting": null
+                            }
+                        ],
+                        "limit": 10,
+                        "direction": "desc"
+                    }
+                }
+            ]
+        },
+        {
+            "id": 31,
+            "type": "advancedTimechart",
+            "name": "Process status",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "count(sap_start_service_processes{$__scope} == 1) or vector(0)",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Instance status",
+                        "timeSeriesDisplayNameTemplate": "Gray",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "number",
+                        "inputFormat": "1",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                },
+                {
+                    "query": "count(sap_start_service_processes{$__scope} == 2) or vector(0)",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Instance status",
+                        "timeSeriesDisplayNameTemplate": "Green",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "number",
+                        "inputFormat": "1",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                },
+                {
+                    "query": "count(sap_start_service_processes{$__scope} == 3) or vector(0)",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Instance status",
+                        "timeSeriesDisplayNameTemplate": "Yellow",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "number",
+                        "inputFormat": "1",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                },
+                {
+                    "query": "count(sap_start_service_processes{$__scope} == 4) or vector(0)",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Instance status",
+                        "timeSeriesDisplayNameTemplate": "Red",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "number",
+                        "inputFormat": "1",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "legendConfiguration": {
+                "enabled": true,
+                "position": "right",
+                "layout": "table",
+                "showCurrent": true,
+                "width": null,
+                "height": null
+            },
+            "axesConfiguration": {
+                "bottom": {
+                    "enabled": true
+                },
+                "left": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                },
+                "right": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                }
+            }
+        },
+        {
+            "id": 32,
+            "type": "advancedTimechart",
+            "name": "Requests / sec",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "rate(sap_enqueue_server_enqueue_requests{$__scope}[$__interval])",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Lock | Domain > Host > Instance > ID",
+                        "timeSeriesDisplayNameTemplate": "{{domain}} > {{instance_hostname}} > {{instance_name}} > {{SID}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "number",
+                        "inputFormat": "1",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                },
+                {
+                    "query": "rate(sap_enqueue_server_enqueue_rejects{$__scope}[$__interval])",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Rejected | Domain > Host > Instance > ID",
+                        "timeSeriesDisplayNameTemplate": "{{domain}} > {{instance_hostname}} > {{instance_name}} > {{SID}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "number",
+                        "inputFormat": "1",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                },
+                {
+                    "query": "rate(sap_enqueue_server_dequeue_requests{$__scope}[$__interval])",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Release | Domain > Host > Instance > ID",
+                        "timeSeriesDisplayNameTemplate": "{{domain}} > {{instance_hostname}} > {{instance_name}} > {{SID}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "number",
+                        "inputFormat": "1",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                },
+                {
+                    "query": "rate(sap_enqueue_server_dequeue_all_requests{$__scope}[$__interval])",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "LUW release | Domain > Host > Instance > ID",
+                        "timeSeriesDisplayNameTemplate": "{{domain}} > {{instance_hostname}} > {{instance_name}} > {{SID}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "number",
+                        "inputFormat": "1",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                },
+                {
+                    "query": "rate(sap_enqueue_server_cleanup_requests{$__scope}[$__interval])",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Server release | Domain > Host > Instance > ID",
+                        "timeSeriesDisplayNameTemplate": "{{domain}} > {{instance_hostname}} > {{instance_name}} > {{SID}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "number",
+                        "inputFormat": "1",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "legendConfiguration": {
+                "enabled": true,
+                "position": "bottom",
+                "layout": "table",
+                "showCurrent": true,
+                "width": null,
+                "height": null
+            },
+            "axesConfiguration": {
+                "bottom": {
+                    "enabled": true
+                },
+                "left": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                },
+                "right": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                }
+            }
+        },
+        {
+            "id": 33,
+            "type": "advancedTimechart",
+            "name": "Errors / sec",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "rate(sap_enqueue_server_enqueue_errors{$__scope}[$__interval])",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Lock | Domain > Host > Instance > ID",
+                        "timeSeriesDisplayNameTemplate": "{{domain}} > {{instance_hostname}} > {{instance_name}} > {{SID}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "number",
+                        "inputFormat": "1",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                },
+                {
+                    "query": "rate(sap_enqueue_server_dequeue_errors{$__scope}[$__interval])",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Release | Domain > Host > Instance > ID",
+                        "timeSeriesDisplayNameTemplate": "{{domain}} > {{instance_hostname}} > {{instance_name}} > {{SID}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "number",
+                        "inputFormat": "1",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "legendConfiguration": {
+                "enabled": true,
+                "position": "bottom",
+                "layout": "table",
+                "showCurrent": true,
+                "width": null,
+                "height": null
+            },
+            "axesConfiguration": {
+                "bottom": {
+                    "enabled": true
+                },
+                "left": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                },
+                "right": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                }
+            }
+        },
+        {
+            "id": 34,
+            "type": "advancedTimechart",
+            "name": "Dispatcher queue max",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "sap_dispatcher_queue_max{$__scope}",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Domain > Host > Instance > ID",
+                        "timeSeriesDisplayNameTemplate": "{{domain}} > {{instance_hostname}} > {{instance_name}} > {{SID}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "byte",
+                        "inputFormat": "MiB",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "legendConfiguration": {
+                "enabled": true,
+                "position": "bottom",
+                "layout": "table",
+                "showCurrent": true,
+                "width": null,
+                "height": null
+            },
+            "axesConfiguration": {
+                "bottom": {
+                    "enabled": true
+                },
+                "left": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "B",
+                    "maxInputFormat": "B",
+                    "scale": "linear"
+                },
+                "right": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                }
+            }
+        },
+        {
+            "id": 17,
+            "type": "advancedTimechart",
+            "name": "Dispatcher queue depth",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "sap_dispatcher_queue_now{$__scope}",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Domain > Host > Instance > ID",
+                        "timeSeriesDisplayNameTemplate": "{{domain}} > {{instance_hostname}} > {{instance_name}} > {{SID}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "byteRate",
+                        "inputFormat": "KiB/s",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "legendConfiguration": {
+                "enabled": true,
+                "position": "bottom",
+                "layout": "table",
+                "showCurrent": true,
+                "width": null,
+                "height": null
+            },
+            "axesConfiguration": {
+                "bottom": {
+                    "enabled": true
+                },
+                "left": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "B/s",
+                    "maxInputFormat": "B/s",
+                    "scale": "linear"
+                },
+                "right": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                }
+            }
+        },
+        {
+            "id": 35,
+            "type": "advancedTimechart",
+            "name": "Dispatcher queues reads / sec",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "rate(sap_dispatcher_queue_reads{$__scope}[$__interval])",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Domain > Host > Instance > ID",
+                        "timeSeriesDisplayNameTemplate": "{{domain}} > {{instance_hostname}} > {{instance_name}} > {{SID}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "byteRate",
+                        "inputFormat": "KiB/s",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "legendConfiguration": {
+                "enabled": true,
+                "position": "bottom",
+                "layout": "table",
+                "showCurrent": true,
+                "width": null,
+                "height": null
+            },
+            "axesConfiguration": {
+                "bottom": {
+                    "enabled": true
+                },
+                "left": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "B/s",
+                    "maxInputFormat": "B/s",
+                    "scale": "linear"
+                },
+                "right": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                }
+            }
+        },
+        {
+            "id": 36,
+            "type": "advancedTimechart",
+            "name": "Dispatcher queues writes / sec",
+            "description": "",
+            "nullValueDisplayText": null,
+            "links": null,
+            "advancedQueries": [
+                {
+                    "query": "rate(sap_dispatcher_queue_writes{$__scope}[$__interval])",
+                    "enabled": true,
+                    "displayInfo": {
+                        "displayName": "Domain > Host > Instance > ID",
+                        "timeSeriesDisplayNameTemplate": "{{domain}} > {{instance_hostname}} > {{instance_name}} > {{SID}}",
+                        "type": "lines"
+                    },
+                    "format": {
+                        "unit": "byteRate",
+                        "inputFormat": "KiB/s",
+                        "displayFormat": "auto",
+                        "decimals": null,
+                        "yAxis": "auto",
+                        "nullValueDisplayMode": "connectDotted",
+                        "minInterval": null
+                    },
+                    "compareTo": {
+                        "enabled": false,
+                        "delta": 1,
+                        "timeFormat": "day"
+                    }
+                }
+            ],
+            "legendConfiguration": {
+                "enabled": true,
+                "position": "bottom",
+                "layout": "table",
+                "showCurrent": true,
+                "width": null,
+                "height": null
+            },
+            "axesConfiguration": {
+                "bottom": {
+                    "enabled": true
+                },
+                "left": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "B/s",
+                    "maxInputFormat": "B/s",
+                    "scale": "linear"
+                },
+                "right": {
+                    "enabled": true,
+                    "displayName": null,
+                    "unit": "auto",
+                    "displayFormat": "auto",
+                    "decimals": null,
+                    "minValue": 0.0,
+                    "maxValue": null,
+                    "minInputFormat": "1",
+                    "maxInputFormat": "1",
+                    "scale": "linear"
+                }
+            }
+        }
+    ],
+    "scopeExpressionList": [
+        {
+            "operand": "domain",
+            "operator": "equals",
+            "displayName": "domain",
+            "value": [
+                "SAP"
+            ],
+            "descriptor": {
+                "documentId": "domain",
+                "id": "domain",
+                "metricType": "tag",
+                "type": "string",
+                "scale": 0.0,
+                "name": "domain",
+                "description": "domain",
+                "namespaces": [
+                    "cloudProvider",
+                    "host.container",
+                    "ecs",
+                    "host.fs",
+                    "host.file",
+                    "host",
+                    "kubernetes",
+                    "kubernetes.cluster",
+                    "kubernetes.daemonSet",
+                    "kubernetes.deployment",
+                    "kubernetes.job",
+                    "kubernetes.namespace",
+                    "kubernetes.node",
+                    "kubernetes.pod",
+                    "kubernetes.replicaSet",
+                    "kubernetes.service",
+                    "kubernetes.statefulSet",
+                    "kubernetes.resourcequota",
+                    "kubernetes.hpa",
+                    "link",
+                    "mesos",
+                    "host.net",
+                    "host.process",
+                    "prometheus",
+                    "swarm",
+                    "prombeacon"
+                ],
+                "scopes": [],
+                "timeAggregations": [
+                    "concat",
+                    "distinct",
+                    "count"
+                ],
+                "groupAggregations": [
+                    "concat",
+                    "distinct",
+                    "count"
+                ],
+                "aggregationForGroup": "none",
+                "hidden": false,
+                "experimental": false,
+                "deferred": false,
+                "identity": false,
+                "canMonitor": false,
+                "canGroupBy": false,
+                "canFilter": true,
+                "generatedFrom": "com.draios.model.metrics.custom.CustomMetric$Tag",
+                "publicId": "domain",
+                "heuristic": false,
+                "documentType": "metric",
+                "segment": false,
+                "documentTimestamp": 1700665915134
+            },
+            "variable": false,
+            "isVariable": false
+        },
+        {
+            "operand": "instance",
+            "operator": "in",
+            "displayName": "instance",
+            "value": [],
+            "descriptor": {
+                "documentId": "instance",
+                "id": "instance",
+                "metricType": "tag",
+                "type": "string",
+                "scale": 0.0,
+                "name": "instance",
+                "description": "instance",
+                "namespaces": [
+                    "cloudProvider",
+                    "host.container",
+                    "ecs",
+                    "host.fs",
+                    "host.file",
+                    "host",
+                    "kubernetes",
+                    "kubernetes.cluster",
+                    "kubernetes.daemonSet",
+                    "kubernetes.deployment",
+                    "kubernetes.job",
+                    "kubernetes.namespace",
+                    "kubernetes.node",
+                    "kubernetes.pod",
+                    "kubernetes.replicaSet",
+                    "kubernetes.service",
+                    "kubernetes.statefulSet",
+                    "kubernetes.resourcequota",
+                    "kubernetes.hpa",
+                    "link",
+                    "mesos",
+                    "host.net",
+                    "host.process",
+                    "prometheus",
+                    "swarm",
+                    "prombeacon"
+                ],
+                "scopes": [],
+                "timeAggregations": [
+                    "concat",
+                    "distinct",
+                    "count"
+                ],
+                "groupAggregations": [
+                    "concat",
+                    "distinct",
+                    "count"
+                ],
+                "aggregationForGroup": "none",
+                "hidden": false,
+                "experimental": false,
+                "deferred": false,
+                "identity": false,
+                "canMonitor": false,
+                "canGroupBy": false,
+                "canFilter": true,
+                "generatedFrom": "com.draios.model.metrics.custom.CustomMetric$Tag",
+                "publicId": "instance",
+                "heuristic": false,
+                "documentType": "metric",
+                "segment": false,
+                "documentTimestamp": 1700665915134
+            },
+            "variable": true,
+            "isVariable": true
+        }
+    ],
+    "eventDisplaySettings": {
+        "enabled": true,
+        "queryParams": {
+            "severities": [],
+            "alertStatuses": [],
+            "categories": [],
+            "filter": "",
+            "teamScope": false
+        }
+    },
+    "shared": false,
+    "public": true,
+    "version": 76,
+    "createdOn": 1700147340544,
+    "modifiedOn": 1700665400639,
+    "description": "",
+    "layout": [
+        {
+            "panelId": 10,
+            "x": 0,
+            "y": 22,
+            "w": 24,
+            "h": 1
+        },
+        {
+            "panelId": 11,
+            "x": 0,
+            "y": 29,
+            "w": 24,
+            "h": 1
+        },
+        {
+            "panelId": 6,
+            "x": 0,
+            "y": 13,
+            "w": 12,
+            "h": 9
+        },
+        {
+            "panelId": 8,
+            "x": 0,
+            "y": 23,
+            "w": 8,
+            "h": 6
+        },
+        {
+            "panelId": 14,
+            "x": 0,
+            "y": 30,
+            "w": 12,
+            "h": 9
+        },
+        {
+            "panelId": 5,
+            "x": 0,
+            "y": 0,
+            "w": 24,
+            "h": 6
+        },
+        {
+            "panelId": 30,
+            "x": 0,
+            "y": 6,
+            "w": 24,
+            "h": 7
+        },
+        {
+            "panelId": 31,
+            "x": 12,
+            "y": 13,
+            "w": 12,
+            "h": 9
+        },
+        {
+            "panelId": 32,
+            "x": 8,
+            "y": 23,
+            "w": 8,
+            "h": 6
+        },
+        {
+            "panelId": 33,
+            "x": 16,
+            "y": 23,
+            "w": 8,
+            "h": 6
+        },
+        {
+            "panelId": 34,
+            "x": 12,
+            "y": 30,
+            "w": 12,
+            "h": 9
+        },
+        {
+            "panelId": 17,
+            "x": 0,
+            "y": 39,
+            "w": 8,
+            "h": 6
+        },
+        {
+            "panelId": 35,
+            "x": 8,
+            "y": 39,
+            "w": 8,
+            "h": 6
+        },
+        {
+            "panelId": 36,
+            "x": 16,
+            "y": 39,
+            "w": 8,
+            "h": 6
+        }
+    ],
+    "sharingSettings": [],
+    "publicNotation": false,
+    "publicToken": "dccc0099ccc04ec5b4d43abec0255ea9",
+    "favorite": false,
+    "schema": 3,
+    "username": "Victor Guerrero (victor.guerrero@sysdig.com)",
+    "permissions": [
+        "dashboards.edit",
+        "dashboards.sharing",
+        "dashboards.transfer",
+        "dashboards.read",
+        "dashboards.delete"
+    ]
+}

@@ -1738,7 +1738,7 @@
                 "heuristic": false,
                 "documentType": "metric",
                 "segment": false,
-                "documentTimestamp": 1698682088753
+                "documentTimestamp": 1700155890419
             },
             "variable": false,
             "isVariable": false
@@ -1810,7 +1810,7 @@
                 "heuristic": false,
                 "documentType": "metric",
                 "segment": false,
-                "documentTimestamp": 1698682088753
+                "documentTimestamp": 1700155890419
             },
             "variable": true,
             "isVariable": true
@@ -2030,10 +2030,10 @@
     "schema": 3,
     "username": "Victor Guerrero (victor.guerrero@sysdig.com)",
     "permissions": [
-        "dashboards.sharing",
         "dashboards.edit",
+        "dashboards.sharing",
+        "dashboards.transfer",
         "dashboards.read",
-        "dashboards.delete",
-        "dashboards.transfer"
+        "dashboards.delete"
     ]
 }
