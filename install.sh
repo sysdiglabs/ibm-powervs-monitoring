@@ -270,23 +270,35 @@ echo -e "[-] ${GREEN}OK${NC}"
 echo "[+] Changing Prometheus and exporters ownership..."
 /usr/bin/chown prometheus:prometheus "$temp_dir/prometheus/prometheus-$prometheus.$arch/prometheus"
 /usr/bin/chown node_exporter:node_exporter "$temp_dir/node_exporter/node_exporter-$node_exporter.$arch/node_exporter"
+if [ -z "$sap" ]
+then
+    /usr/bin/chown sap_host_exporter:sap_host_exporter "$temp_dir/sap_host_exporter/sap_host_exporter"
+fi
 echo -e "[-] ${GREEN}OK${NC}"
 
 # create prometheus temp directory
-echo "[+] Creating Prometheus directories..."
+echo "[+] Creating Prometheus and exporters directories..."
 /usr/bin/mkdir /opt/prometheus &>/dev/null
 /usr/bin/mkdir /etc/prometheus &>/dev/null
 /usr/bin/chown prometheus:prometheus /opt/prometheus
+if [ -z "$sap" ]
+then
+    /usr/bin/mkdir /etc/sap_host_exporter &>/dev/null
+fi
 echo -e "[-] ${GREEN}OK${NC}"
 
 # move prometheus and node exporter to bin dir
-echo "[+] Moving Prometheus and Node Exporter to $bin_dir..."
+echo "[+] Moving Prometheus and exporters to $bin_dir..."
 /usr/bin/mv "$temp_dir/prometheus/prometheus-$prometheus.$arch/prometheus" "$bin_dir"
 /usr/bin/mv "$temp_dir/node_exporter/node_exporter-$node_exporter.$arch/node_exporter" "$bin_dir"
+if [ -z "$sap" ]
+then
+    /usr/bin/mv "$temp_dir/sap_host_exporter/sap_host_exporter" "$bin_dir"
+fi
 echo -e "[-] ${GREEN}OK${NC}"
 
 # create prometheus service file
-echo "[+] Creating Prometheus and Node Exporter service files..."
+echo "[+] Creating Prometheus and exporters service files..."
 /usr/bin/cat <<EOF > /etc/systemd/system/prometheus.service
 [Unit]
 Description=Prometheus
@@ -324,6 +336,25 @@ ExecStart=/usr/local/bin/node_exporter --collector.disable-defaults \
 WantedBy=multi-user.target
 EOF
 
+# create sap host exporter service file
+if [ -z "$sap" ]
+then
+/usr/bin/cat <<EOF > /etc/systemd/system/sap_host_exporter.service
+[Unit]
+Description=SAP Host Exporter
+After=network.target
+
+[Service]
+User=sap_host_exporter
+Group=sap_host_exporter
+Type=simple
+ExecStart=/usr/local/bin/sap_host_exporter -c /etc/sap_host_exporter/sap_host_exporter.yml
+
+[Install]
+WantedBy=multi-user.target
+EOF
+fi
+
 echo -e "[-] ${GREEN}OK${NC}"
 
 # create prometheus config file
@@ -353,6 +384,21 @@ EOF
 /usr/bin/chown prometheus:prometheus /etc/prometheus/prometheus.yml
 echo -e "[-] ${GREEN}OK${NC}"
 
+# create sap host exporter service file
+if [ -z "$sap" ]
+then
+echo "[+] Creating SAP Host Exporter config file..."
+/usr/bin/cat <<EOF >> /etc/prometheus/prometheus.yml
+  - job_name: "sap_host_exporter"
+    static_configs:
+      - targets:
+          - localhost:9680
+    relabel_configs:
+      - target_label: domain
+        replacement: 'SAP'
+EOF
+echo -e "[-] ${GREEN}OK${NC}"
+fi
 
 # reload systemd services
 echo "[+] Reloading systemd services..."
@@ -363,20 +409,32 @@ echo -e "[-] ${GREEN}OK${NC}"
 echo "[+] Disabling SELinux for Prometheus and Node Exporter..."
 /usr/sbin/restorecon -r /usr/local/bin/prometheus
 /usr/sbin/restorecon -r /usr/local/bin/node_exporter
+if [ -z "$sap" ]
+then
+    /usr/sbin/restorecon -r /usr/local/bin/sap_host_exporter
+fi
 echo -e "[-] ${GREEN}OK${NC}"
 
 # enable prometheus and node exporter services
 echo "[+] Enabling and starting Prometheus and Node Exporter services..."
 /usr/bin/systemctl enable prometheus.service &>/dev/null
 /usr/bin/systemctl enable node_exporter.service &>/dev/null
+if [ -z "$sap" ]
+then
+    /usr/bin/systemctl enable sap_host_exporter.service &>/dev/null
+fi
 
 # start prometheus and node exporter services
 /usr/bin/systemctl start prometheus.service
 /usr/bin/systemctl start node_exporter.service
+if [ -z "$sap" ]
+then
+    /usr/bin/systemctl start sap_host_exporter.service
+fi
 echo -e "[-] ${GREEN}OK${NC}"
 
-# check if prometheus and node exporter are running
-echo "[+] Checking if Prometheus and Node Exporter are running..."
+# check if prometheus and exporters are running
+echo "[+] Checking if Prometheus and exporters are running..."
 if /usr/bin/systemctl is-active --quiet prometheus; then
     echo -e "[-] ${GREEN}Prometheus is running.${NC}"
 else
@@ -389,7 +447,23 @@ else
     echo -e "[*] ${RED}Node Exporter is NOT running.${NC}"
 fi
 
+if [ -z "$sap" ]
+then
+    if /usr/bin/systemctl is-active --quiet sap_host_exporter; then
+        echo -e "[-] ${GREEN}SAP Host exporter is running.${NC}"
+    else
+        echo -e "[*] ${RED}SAP Host exporter is NOT running.${NC}"
+    fi
+fi
+
 if /usr/bin/systemctl is-active --quiet node_exporter && /usr/bin/systemctl is-active --quiet prometheus; then
+    if [ -z "$sap" ]
+    then
+        if ! /usr/bin/systemctl is-active --quiet sap_host_exporter; then
+            echo -e "[*] ${RED}ERROR! Someting went wrong. Please check your SAP endopoint and credentials.${NC}" >&2
+            exit 1
+        fi
+    fi
     event_json='{"event": {"type": "CUSTOM","description": "Prometheus and Node Exporter installed successfully!","name": "New PowerVS host connected","scope": "host.hostName = \"'$(/usr/bin/hostname)'\"","severity": "LOW","source": "CMD","tags": {"source": "CMD"}}}'
 
     # send a event to Cloud Monitoring
@@ -410,6 +484,11 @@ echo "[+] Cleaning up..."
 /usr/bin/rm -rf $temp_dir/node_exporter
 /usr/bin/rm -rf $temp_dir/prometheus.tar.gz
 /usr/bin/rm -rf $temp_dir/node_exporter.tar.gz
+if [ -z "$sap" ]
+then
+    /usr/bin/rm -rf $temp_dir/sap_host_exporter
+    /usr/bin/rm -rf $temp_dir/sap_host_exporter.gz
+fi
 echo -e "[-] ${GREEN}OK${NC}"
 
 echo "SUCCESS! Installation succeeded!"
