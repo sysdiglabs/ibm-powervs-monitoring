@@ -42,8 +42,8 @@ usage() {
   echo -e "\t -r: Cloud Monitor endpoint region. Required. Check the full list here: https://cloud.ibm.com/docs/monitoring?topic=monitoring-endpoints#endpoints_monitoring"
   echo -e "\t -t: Cloud Monitor API Key token. Required."
   echo -e "\t -s: SAP instance IP and port(optional). I.E: 10.150.0.57:50210"
-  echo -e "\t -user: SAP control user"
-  echo -e "\t -password: SAP control password"
+  echo -e "\t -l: SAP control user"
+  echo -e "\t -c: SAP control password"
   echo -e "\t -p: Prometheus version. If not provided, the latest version will be installed."
   echo -e "\t -n: Node Exporter version. If not provided, the latest version will be installed(optional)."
   echo -e "\t -u: Uninstall Prometheus and Node Exporter and its dependencies(optional)."
@@ -56,32 +56,40 @@ uninstall() {
     echo "[+] Uninstalling Prometheus and Node Exporter..."
     /usr/bin/systemctl stop prometheus.service &>/dev/null
     /usr/bin/systemctl stop node_exporter.service &>/dev/null
+    /usr/bin/systemctl stop sap_host_exporter.service &>/dev/null
     /usr/bin/systemctl disable prometheus.service &>/dev/null
     /usr/bin/systemctl disable node_exporter.service &>/dev/null
+    /usr/bin/systemctl disable sap_host_exporter.service &>/dev/null
     /usr/bin/rm -rf /usr/local/bin/prometheus
     /usr/bin/rm -rf /usr/local/bin/node_exporter
+    /usr/bin/rm -rf /usr/local/bin/sap_host_exporter
     /usr/bin/rm -rf /etc/prometheus
     /usr/bin/rm -rf /opt/prometheus
+    /usr/bin/rm -rf /etc/sap_host_exporter
     /usr/bin/rm -rf /etc/systemd/system/prometheus.service
     /usr/bin/rm -rf /etc/systemd/system/node_exporter.service
+    /usr/bin/rm -rf /etc/systemd/system/sap_host_exporter.service
     /usr/bin/rm -rf $temp_dir/prometheus
     /usr/bin/rm -rf $temp_dir/node_exporter
+    /usr/bin/rm -rf $temp_dir/sap_host_exporter
     /usr/bin/rm -rf $temp_dir/prometheus.tar.gz
     /usr/bin/rm -rf $temp_dir/node_exporter.tar.gz
-    /usr/sbin/userdel prometheus
-    /usr/sbin/userdel node_exporter
+    /usr/bin/rm -rf $temp_dir/sap_host_exporter.gz
+    /usr/sbin/userdel prometheus &>/dev/null
+    /usr/sbin/userdel node_exporter &>/dev/null
+    /usr/sbin/userdel sap_host_exporter &>/dev/null
     echo -e "[-] ${GREEN}OK${NC}"
     exit 0
 }
 
-while getopts r:t:s:user:password:p:n:uh flag
+while getopts r:t:s:l:c:p:n:uh flag
 do
     case "${flag}" in
         r) endpoint=${OPTARG};;
         t) key=${OPTARG};;
         s) sap=${OPTARG};;
-        user) user=${OPTARG};;
-        password) password=${OPTARG};;
+        l) user=${OPTARG};;
+        c) password=${OPTARG};;
         p) prometheus=${OPTARG};;
         n) node_exporter=${OPTARG};;
         u) uninstall;;
@@ -99,9 +107,9 @@ then
 fi
 
 # abort if sap user and password are not provide when SAP instance does
-if [ ! -n "$sap" ] && [[ -z "$user" ] || [ -z "$password"]]
+if [[ -n "$sap" && ( -z "$user" || -z "$password" ) ]]
 then
-    echo 'Missing SAP control user (-user) or SAP control password (-password)' >&2
+    echo 'Missing SAP control user (-l) or SAP control password (-c)' >&2
     usage
     exit 1
 fi
@@ -140,7 +148,7 @@ then #lastest version
     node_exporter=${node_exporter:1}
 fi
 
-if [ -z "$sap" ]
+if [ -n "$sap" ]
 then #set last SAP Host exporter version
     sap_exporter=$(/usr/bin/curl -s https://api.github.com/repos/SUSE/sap_host_exporter/releases/latest | /usr/bin/grep tag_name | /usr/bin/cut -d '"' -f 4)
 fi
@@ -204,7 +212,7 @@ fi
 echo -e "[-] ${GREEN}OK${NC}"
 
 # download SAP Host exporter
-if [ -z "$sap" ]
+if [ -n "$sap" ]
 then
     echo "[+] Downloading SAP Host Exporter..."
     /usr/bin/wget -q "https://github.com/SUSE/sap_host_exporter/releases/download/$sap_exporter/sap_host_exporter-ppc64le.gz" -O $temp_dir/sap_host_exporter.gz
@@ -223,7 +231,7 @@ fi
 echo "[+] Creating temp directory..."
 /usr/bin/mkdir -p $temp_dir/prometheus
 /usr/bin/mkdir -p $temp_dir/node_exporter
-if [ -z "$sap" ]
+if [ -n "$sap" ]
 then
     /usr/bin/mkdir -p $temp_dir/sap_host_exporter
 fi
@@ -237,19 +245,19 @@ echo -e "[-] ${GREEN}OK${NC}"
 echo "[+] Extracting Prometheus and exporters..."
 /usr/bin/tar xfz $temp_dir/prometheus.tar.gz -C $temp_dir/prometheus || { echo -e "[*] ${RED}ERROR! Extracting the Prometheus tar.${NC}"; exit 1; }
 /usr/bin/tar xfz $temp_dir/node_exporter.tar.gz -C $temp_dir/node_exporter || { echo -e "[*] ${RED}ERROR! Extracting the Node Exporter.${NC}"; exit 1; }
-if [ -z "$sap" ]
+if [ -n "$sap" ]
 then
     /usr/bin/gunzip -c $temp_dir/sap_host_exporter.gz > $temp_dir/sap_host_exporter/sap_host_exporter || { echo -e "[*] ${RED}ERROR! Extracting the SAP Host Exporter.${NC}"; exit 1; }
 fi
 echo -e "[-] ${GREEN}OK${NC}"
 
-# create prometheus and node exporter users
-echo "[+] Creating system users users..."
+# Create prometheus and exporters users
+echo "[+] Creating system users..."
 /usr/sbin/useradd --no-create-home --shell /bin/false prometheus &>/dev/null
 /usr/sbin/useradd --no-create-home --shell /bin/false node_exporter &>/dev/null
 /usr/sbin/usermod -a -G prometheus prometheus &>/dev/null
 /usr/sbin/usermod -a -G node_exporter node_exporter &>/dev/null
-if [ -z "$sap" ]
+if [ -n "$sap" ]
 then
     /usr/sbin/useradd --no-create-home --shell /bin/false sap_host_exporter &>/dev/null
     /usr/sbin/usermod -a -G sap_host_exporter sap_host_exporter &>/dev/null
@@ -260,7 +268,7 @@ echo -e "[-] ${GREEN}OK${NC}"
 echo "[+] Making Prometheus and exporters executable..."
 /usr/bin/chmod +x "$temp_dir/prometheus/prometheus-$prometheus.$arch/prometheus"
 /usr/bin/chmod +x "$temp_dir/node_exporter/node_exporter-$node_exporter.$arch/node_exporter"
-if [ -z "$sap" ]
+if [ -n "$sap" ]
 then
     /usr/bin/chmod +x "$temp_dir/sap_host_exporter/sap_host_exporter"
 fi
@@ -270,7 +278,7 @@ echo -e "[-] ${GREEN}OK${NC}"
 echo "[+] Changing Prometheus and exporters ownership..."
 /usr/bin/chown prometheus:prometheus "$temp_dir/prometheus/prometheus-$prometheus.$arch/prometheus"
 /usr/bin/chown node_exporter:node_exporter "$temp_dir/node_exporter/node_exporter-$node_exporter.$arch/node_exporter"
-if [ -z "$sap" ]
+if [ -n "$sap" ]
 then
     /usr/bin/chown sap_host_exporter:sap_host_exporter "$temp_dir/sap_host_exporter/sap_host_exporter"
 fi
@@ -281,9 +289,10 @@ echo "[+] Creating Prometheus and exporters directories..."
 /usr/bin/mkdir /opt/prometheus &>/dev/null
 /usr/bin/mkdir /etc/prometheus &>/dev/null
 /usr/bin/chown prometheus:prometheus /opt/prometheus
-if [ -z "$sap" ]
+if [ -n "$sap" ]
 then
     /usr/bin/mkdir /etc/sap_host_exporter &>/dev/null
+    /usr/bin/chown -R sap_host_exporter:sap_host_exporter /etc/sap_host_exporter
 fi
 echo -e "[-] ${GREEN}OK${NC}"
 
@@ -291,7 +300,7 @@ echo -e "[-] ${GREEN}OK${NC}"
 echo "[+] Moving Prometheus and exporters to $bin_dir..."
 /usr/bin/mv "$temp_dir/prometheus/prometheus-$prometheus.$arch/prometheus" "$bin_dir"
 /usr/bin/mv "$temp_dir/node_exporter/node_exporter-$node_exporter.$arch/node_exporter" "$bin_dir"
-if [ -z "$sap" ]
+if [ -n "$sap" ]
 then
     /usr/bin/mv "$temp_dir/sap_host_exporter/sap_host_exporter" "$bin_dir"
 fi
@@ -337,7 +346,7 @@ WantedBy=multi-user.target
 EOF
 
 # create sap host exporter service file
-if [ -z "$sap" ]
+if [ -n "$sap" ]
 then
 /usr/bin/cat <<EOF > /etc/systemd/system/sap_host_exporter.service
 [Unit]
@@ -353,9 +362,8 @@ ExecStart=/usr/local/bin/sap_host_exporter -c /etc/sap_host_exporter/sap_host_ex
 [Install]
 WantedBy=multi-user.target
 EOF
-fi
-
 echo -e "[-] ${GREEN}OK${NC}"
+fi
 
 # create prometheus config file
 echo "[+] Creating Prometheus config file..."
@@ -384,8 +392,31 @@ EOF
 /usr/bin/chown prometheus:prometheus /etc/prometheus/prometheus.yml
 echo -e "[-] ${GREEN}OK${NC}"
 
+if [ -n "$sap" ]
+then
+echo "[+] Creating SAP Host config file..."
+/usr/bin/cat <<EOF > /etc/sap_host_exporter/sap_host_exporter.yml
+# The listening TCP/IP address and port.
+address: "127.0.0.1"
+port: "9680"
+
+# The log level. Possible values, from less to most verbose: error, warn, info, debug.
+log-level: "info"
+
+# The url of the SAPControl web service.
+sap-control-url: "$sap"
+
+# HTTP Basic Authentication credentials for the SAPControl web service
+sap-control-user: "$user"
+sap-control-password: "$password"
+EOF
+
+/usr/bin/chown -R sap_host_exporter:sap_host_exporter /etc/sap_host_exporter
+echo -e "[-] ${GREEN}OK${NC}"
+fi
+
 # create sap host exporter service file
-if [ -z "$sap" ]
+if [ -n "$sap" ]
 then
 echo "[+] Creating SAP Host Exporter config file..."
 /usr/bin/cat <<EOF >> /etc/prometheus/prometheus.yml
@@ -405,21 +436,21 @@ echo "[+] Reloading systemd services..."
 /usr/bin/systemctl daemon-reload
 echo -e "[-] ${GREEN}OK${NC}"
 
-# disable SELinux for Prometheus and Node Exporter
-echo "[+] Disabling SELinux for Prometheus and Node Exporter..."
+# Disable SELinux for Prometheus and exporters
+echo "[+] Disabling SELinux for Prometheus and exporters..."
 /usr/sbin/restorecon -r /usr/local/bin/prometheus
 /usr/sbin/restorecon -r /usr/local/bin/node_exporter
-if [ -z "$sap" ]
+if [ -n "$sap" ]
 then
     /usr/sbin/restorecon -r /usr/local/bin/sap_host_exporter
 fi
 echo -e "[-] ${GREEN}OK${NC}"
 
-# enable prometheus and node exporter services
-echo "[+] Enabling and starting Prometheus and Node Exporter services..."
+# Enable Prometheus and exporter services
+echo "[+] Enabling and starting Prometheus and exporter services..."
 /usr/bin/systemctl enable prometheus.service &>/dev/null
 /usr/bin/systemctl enable node_exporter.service &>/dev/null
-if [ -z "$sap" ]
+if [ -n "$sap" ]
 then
     /usr/bin/systemctl enable sap_host_exporter.service &>/dev/null
 fi
@@ -427,7 +458,7 @@ fi
 # start prometheus and node exporter services
 /usr/bin/systemctl start prometheus.service
 /usr/bin/systemctl start node_exporter.service
-if [ -z "$sap" ]
+if [ -n "$sap" ]
 then
     /usr/bin/systemctl start sap_host_exporter.service
 fi
@@ -447,7 +478,7 @@ else
     echo -e "[*] ${RED}Node Exporter is NOT running.${NC}"
 fi
 
-if [ -z "$sap" ]
+if [ -n "$sap" ]
 then
     if /usr/bin/systemctl is-active --quiet sap_host_exporter; then
         echo -e "[-] ${GREEN}SAP Host exporter is running.${NC}"
@@ -457,12 +488,10 @@ then
 fi
 
 if /usr/bin/systemctl is-active --quiet node_exporter && /usr/bin/systemctl is-active --quiet prometheus; then
-    if [ -z "$sap" ]
+    if [[ -n "$sap" && ! $(/usr/bin/systemctl is-active --quiet sap_host_exporter) ]]
     then
-        if ! /usr/bin/systemctl is-active --quiet sap_host_exporter; then
-            echo -e "[*] ${RED}ERROR! Someting went wrong. Please check your SAP endopoint and credentials.${NC}" >&2
-            exit 1
-        fi
+        echo -e "[*] ${RED}ERROR! Someting went wrong. Please check your SAP endopoint and credentials.${NC}" >&2
+        exit 1
     fi
     event_json='{"event": {"type": "CUSTOM","description": "Prometheus and Node Exporter installed successfully!","name": "New PowerVS host connected","scope": "host.hostName = \"'$(/usr/bin/hostname)'\"","severity": "LOW","source": "CMD","tags": {"source": "CMD"}}}'
 
@@ -484,7 +513,7 @@ echo "[+] Cleaning up..."
 /usr/bin/rm -rf $temp_dir/node_exporter
 /usr/bin/rm -rf $temp_dir/prometheus.tar.gz
 /usr/bin/rm -rf $temp_dir/node_exporter.tar.gz
-if [ -z "$sap" ]
+if [ -n "$sap" ]
 then
     /usr/bin/rm -rf $temp_dir/sap_host_exporter
     /usr/bin/rm -rf $temp_dir/sap_host_exporter.gz
