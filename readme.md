@@ -2,12 +2,13 @@
 
 ### Description
 
-This script will deploy the monitoring stack on IBM PowerVS over RHEL. The stack is composed by Prometheus and Node exporter for PPC64le architecture. The script will also configure the remote write endpoint to send the time series to the IBM Cloud Monitoring instance. No further extra configuration is needed.
+This script will deploy the monitoring stack on IBM PowerVS over RHEL. The stack is composed by Prometheus and Node exporter for PPC64le architecture as well as SAP Host exporter if selected. The script will also configure the remote write endpoint to send the time series to the IBM Cloud Monitoring instance. No further extra configuration is needed.
 
 ### Prerequisites
 
 - [IBM Cloud account](https://cloud.ibm.com/registration)
 - A PowerVS instance with RHEL installed. The supported architecture is ppc64le.
+- A SAP instance if SAP Host exporter is selected.
 - Root access to the PowerVS instance
 
 ### Usage
@@ -27,6 +28,8 @@ https://github.com/sysdiglabs/ibm-powervs-monitoring/assets/7352160/7ae2c42b-024
 
 ### Time-series consumption and cost estimation
 
+#### Host
+
 The following table shows the estimated time-series consumption for a single node. The values may vary depending on the number of cores, devices and interfaces of the node.
 
 | Collector  | Metrics | TS Consumption          |
@@ -41,7 +44,23 @@ For a node with 2 cores, 1 device and 2 interfaces, the estimated time-series co
 
 Based on the [pricing plans](https://cloud.ibm.com/docs/monitoring?topic=monitoring-pricing_plans), the estimated cost is **~$42 per month**.
 
-### Collectors configuration
+#### SAP
+
+The following table shows the estimated time-series consumption for a single SAP instance. The values may vary depending on the number of instances running on the node.
+
+| Collector  | Metrics | TS Consumption          |
+| ---------- | ------- | ----------------------- |
+| Dispatcher | 5       | 5 x <# of types>        |
+| Enqueue    | 27      | 27                      |
+| Service    | 2       | 2 x <# of features>     |
+
+For a single SAP node, the estimated time-series consumption is ~96 time-series.
+
+Based on the [pricing plans](https://cloud.ibm.com/docs/monitoring?topic=monitoring-pricing_plans), the estimated cost is **~$8 per month**.
+
+### Configuration
+
+#### Node Exporter collectors
 
 The following collectors are enabled by default:
 - collector.cpu
@@ -54,12 +73,24 @@ Collectors can be configured in the ```node_exporter.service``` file.
 
 The full available list of collectors can be found in the official [node_exporter repository](https://github.com/prometheus/node_exporter).
 
+#### SAP Host Exporter file
+
+The SAP Host Exporter configuration file is located in ```/etc/sap_host_exporter/sap_host_exporter.yml```. The following parameters can be configured:
+- ```sap-control-url``` : SAP instance IP address and port <IP Address>:<Port>
+- ```sap-control-user``` : SAP instance username
+- ```sap-control-password``` : SAP instance password
+
 ### Visualization
 
 The following dashboard is available to visualize the metrics once the monitoring stack is deployed:
 
+#### Host
+
 ![Linux PowerVS](https://github.com/sysdiglabs/ibm-powervs-monitoring/assets/7352160/f5754145-ef2d-44d9-a120-16b520889354)
 
+#### SAP instance
+
+![SAP Instance](https://github.com/sysdiglabs/ibm-powervs-monitoring/assets/7352160/f5754145-ef2d-44d9-a120-16b520889354)
 
 ### Uninstall
 
