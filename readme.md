@@ -90,7 +90,7 @@ The following dashboard is available to visualize the metrics once the monitorin
 
 #### SAP instance
 
-![SAP Instance](https://github.com/sysdiglabs/ibm-powervs-monitoring/assets/7352160/f5754145-ef2d-44d9-a120-16b520889354)
+![SAP Instance](https://github.com/sysdiglabs/ibm-powervs-monitoring/assets/7352160/e53000a3-7e48-47df-a93f-f2f458578dd3)
 
 ### Uninstall
 
