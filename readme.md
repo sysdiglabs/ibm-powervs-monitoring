@@ -15,8 +15,26 @@ This script will deploy the monitoring stack on IBM PowerVS over RHEL. The stack
 
 Example of usage:
 ```
-./install.sh -r <region> -t <token> -p <Prometheus version, latest by default> -n <Node exporter version, latest by default>
+./install.sh -r <region> -t <token> -p <Prometheus version, latest by default> -n <Node exporter version, latest by default> -s <SAP control URL or instance> -l <SAP control user> -c <SAP control password> -s <SAP control URL or instance>
+# Basic usage
 ./install.sh -r https://eu-es.monitoring.cloud.ibm.com -t XXXXXX-XXXXX-XXXXXX-XXXXXXXXX
+```
+
+#### Parameters
+
+```
+Usage: ./install.sh [-r region] [-t token] [-p prometheus_version] [-n node_exporter_version] [-s sap_instance_host] [-l sap_control_user] [-c sap_control_password]
+
+	 -r: Cloud Monitor endpoint region. Required. Check the full list here: https://cloud.ibm.com/docs/monitoring?topic=monitoring-endpoints#endpoints_monitoring
+	 -t: Cloud Monitor API Key token. Required.
+	 -s: SAP instance IP and port(optional). I.E: 10.150.0.57:50210
+	 -l: SAP control user
+	 -c: SAP control password
+	 -p: Prometheus version. If not provided, the latest version will be installed.
+	 -n: Node Exporter version. If not provided, the latest version will be installed(optional).
+	 -u: Uninstall Prometheus and Node Exporter and its dependencies(optional).
+	 -h: Show this help message.
+
 ```
 
 #### Demo time

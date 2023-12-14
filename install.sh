@@ -37,7 +37,7 @@ NC='\033[0m'
 
 usage() {
   echo
-  echo "Usage: $0 [-r region] [-t token] [-p prometheus_version] [-n node_exporter_version]" 1>&2;
+  echo "Usage: $0 [-r region] [-t token] [-p prometheus_version] [-n node_exporter_version] [-s sap_instance_host] [-l sap_control_user] [-c sap_control_password]" 1>&2;
   echo
   echo -e "\t -r: Cloud Monitor endpoint region. Required. Check the full list here: https://cloud.ibm.com/docs/monitoring?topic=monitoring-endpoints#endpoints_monitoring"
   echo -e "\t -t: Cloud Monitor API Key token. Required."
